@@ -75,7 +75,8 @@ export const initialExercises: Exercise[] = [
   {
     id: "EX-002",
     name: "Respiracao costodiafragmatica",
-    description: "Treino respiratorio para expansao toracica e controle de tensao.",
+    description:
+      "Treino respiratorio para expansao toracica e controle de tensao.",
     tags: "respiracao,rpg",
     thumbnail: "https://images.unsplash.com/photo-1506126613408-eca07ce68773",
     youtube: "https://www.youtube.com/watch?v=kgTL5G1ibIo",
