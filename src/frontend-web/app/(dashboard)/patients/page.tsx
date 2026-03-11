@@ -130,7 +130,7 @@ export default function PatientsPage() {
                   <td className="py-3">
                     <button
                       onClick={() => setSelectedId(patient.id)}
-                      className="hover:opacity-70 transition duration-300 ease-in-out"
+                      className="hover:opacity-70 focus:font-bold transition duration-300 ease-in-out"
                     >
                       {patient.firstName} {patient.lastName}
                     </button>
@@ -139,7 +139,7 @@ export default function PatientsPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => deletePatient(patient.id)}
-                        className="rounded-md bg-light-salmon px-3 py-1 hover:opacity-70 transition duration-300 ease-in-out"
+                        className="rounded-md bg-neutral-200 px-3 py-1 hover:opacity-70 transition duration-300 ease-in-out"
                       >
                         Excluir
                       </button>
@@ -176,44 +176,20 @@ export default function PatientsPage() {
               <p className="font-semibold">Aderência ao plano</p>
               <div className="h-3 rounded-full bg-neutral-200">
                 <div
-                  className="h-3 rounded-full bg-black/70"
+                  className="h-3 rounded-full bg-black/60"
                   style={{ width: `${selectedPatient.adherence}%` }}
                 />
               </div>
-              <p className=" text-neutral-600">
+              <p className="text-neutral-600">
                 {selectedPatient.adherence}% dos exercícios foram completados
               </p>
-              <p>
-                <span className="font-semibold">Diagnóstico:</span>{" "}
-                {selectedPatient.diagnosis}
-              </p>
-              <p>
-                <span className="font-semibold">Última sessão:</span>{" "}
-                {selectedPatient.lastSession}
-              </p>
-              <p>
-                <span className="font-semibold">Escala média de dor:</span>{" "}
-                {selectedPatient.painLevel}/10
-              </p>
-              <div>
-                <p className="font-semibold">Aderência ao plano</p>
-                <div className="h-3 rounded-full bg-neutral-200">
-                  <div
-                    className="h-3 rounded-full bg-black/70"
-                    style={{ width: `${selectedPatient.adherence}%` }}
-                  />
-                </div>
-                <p className="text-slate-600">
-                  {selectedPatient.adherence}% dos exercícios foram completados
-                </p>
-              </div>
             </div>
-            <button className="rounded-md bg-dark-blue px-4 py-2 text-white w-full hover:opacity-70 transition duration-300 ease-in-out">
+            <button className="rounded-md bg-blue px-4 py-2 text-neutral w-full hover:opacity-70 transition duration-300 ease-in-out">
               Acessar prontuário completo
             </button>
           </div>
         ) : (
-          <p className="mt-3  text-neutral-500">
+          <p className="mt-3 text-neutral-500">
             Selecione um paciente para visualizar o prontuario.
           </p>
         )}
@@ -229,7 +205,7 @@ export default function PatientsPage() {
             <button
               key={day}
               onClick={() => setSelectedDay(day)}
-              className={`py-2 px-4 rounded-2xl border border-light-blue bg-neutral cursor-pointer ${selectedDay === day && "bg-dark-blue text-color border-dark-blue"}`}
+              className={`py-2 px-4 rounded-2xl border border-light-blue bg-neutral cursor-pointer ${selectedDay == day && "bg-blue text-color border-blue"}`}
             >
               {day}
             </button>
@@ -267,7 +243,7 @@ export default function PatientsPage() {
             className="col-span-4 rounded-md border border-neutral-300 px-3 py-2 md:col-span-3"
           />
           <button
-            className="col-span-4 rounded-md bg-dark-blue px-4 py-2 font-semibold text-white md:col-span-2 hover:opacity-70 transition duration-300 ease-in-out"
+            className="col-span-4 rounded-md bg-blue px-4 py-2 font-semibold text-neutral md:col-span-2 hover:opacity-70 transition duration-300 ease-in-out"
             type="submit"
           >
             Adicionar

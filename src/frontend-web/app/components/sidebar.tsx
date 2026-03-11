@@ -55,7 +55,7 @@ export function Sidebar({ expanded, onToggle }: SidebarProps) {
           onClick={onToggle}
           aria-expanded={expanded}
           aria-label={expanded ? "Recolher menu" : "Expandir menu"}
-          className={`${iconButtonSize} grid place-items-center rounded-md bg-light-blue/60 text-dark-blue transition-all duration-300 hover:bg-light-blue`}
+          className={`${iconButtonSize} grid place-items-center rounded-md bg-light-blue/60 text-blue transition-all duration-300 hover:bg-light-blue`}
           type="button"
         >
           <svg
@@ -81,14 +81,14 @@ export function Sidebar({ expanded, onToggle }: SidebarProps) {
                   ? "h-11 w-full gap-3 px-4"
                   : `${iconButtonSize} mx-auto justify-center`
                 } ${active
-                  ? "bg-dark-blue text-white"
+                  ? "bg-blue text-neutral"
                   : "bg-light-blue/45 text-black hover:bg-light-blue"
                 }`}
               title={item.label}
             >
               <span className={`h-6 w-6 shrink-0 ${active && "invert"}`}><img src={item.icon}/></span>
               <span
-                className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity,transform] duration-300 ${
+                className={`overflow-hidden neutralspace-nowrap transition-[max-width,opacity,transform] duration-300 ${
                   expanded
                     ? "max-w-44 translate-x-0 opacity-100"
                     : "max-w-0 -translate-x-2 opacity-0"

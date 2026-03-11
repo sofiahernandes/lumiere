@@ -119,7 +119,7 @@ export default function ExercisesPage() {
             required
           />
           <button
-            className="col-span-full rounded-md bg-dark-blue mt-2 px-3 py-4 font-semibold text-white hover:opacity-70 transition duration-300 ease-in-out"
+            className="col-span-full rounded-md bg-blue mt-2 px-3 py-4 font-semibold text-neutral hover:opacity-70 transition duration-300 ease-in-out"
             type="submit"
           >
             Cadastrar exercício
@@ -144,20 +144,20 @@ export default function ExercisesPage() {
               className="relative rounded-md border border-slate-200 bg-[#FDFDFD] p-3 space-y-1"
             >
               <p className="font-semibold">{exercise.name}</p>
-              <p className="mt-1 text-xs uppercase tracking-wide text-dark-blue">
+              <p className="mt-1 text-xs uppercase tracking-wide">
                 {exercise.tags}
               </p>
               <a
                 href={exercise.youtube}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-2 inline-block text-dark-blue underline underline-offset-2 hover:opacity-70 transition duration-300 ease-in-out"
+                className="mt-2 inline-block text-darker-blue underline underline-offset-2 hover:opacity-70 transition duration-300 ease-in-out"
               >
                 Abrir video
               </a>
               <button
                 onClick={() => removeExercise(exercise.id)}
-                className="absolute right-3 bottom-4 rounded-md bg-light-salmon px-3 py-1 hover:opacity-70 transition duration-300 ease-in-out"
+                className="absolute right-3 bottom-4 rounded-md bg-neutral-200 px-3 py-1 hover:opacity-70 transition duration-300 ease-in-out"
               >
                 Excluir
               </button>
