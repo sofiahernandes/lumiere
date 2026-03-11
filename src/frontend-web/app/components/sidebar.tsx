@@ -11,54 +11,24 @@ type SidebarProps = {
 type NavItem = {
   href: string;
   label: string;
-  icon: (className?: string) => React.ReactNode;
+  icon: string;
 };
 
 const items: NavItem[] = [
   {
     href: "/exercises",
     label: "Exercícios",
-    icon: (className = "") => (
-      <svg
-        viewBox="0 0 24 24"
-        className={className}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M4 7h16M4 12h16M4 17h10" />
-      </svg>
-    ),
+    icon: '/exercises.png'
   },
   {
     href: "/patients/new",
     label: "Adicionar Paciente",
-    icon: (className = "") => (
-      <svg
-        viewBox="0 0 24 24"
-        className={className}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M12 5v14M5 12h14" />
-      </svg>
-    ),
+    icon: '/edit-user.png'
   },
   {
     href: "/patients",
     label: "Acompanhar Pacientes",
-    icon: (className = "") => (
-      <svg
-        viewBox="0 0 24 24"
-        className={className}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M4 19V5m0 14h16M8 15l3-4 3 2 4-6" />
-      </svg>
-    ),
+    icon: '/users.png'
   },
 ];
 
@@ -76,7 +46,7 @@ export function Sidebar({ expanded, onToggle }: SidebarProps) {
             expanded
               ? "max-w-62 opacity-100"
               : "max-w-0 opacity-0"
-          }`}
+            }`}
         >
           <p className="font-display text-2xl">Lumière</p>
         </div>
@@ -107,24 +77,22 @@ export function Sidebar({ expanded, onToggle }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center rounded-md  font-semibold transition-all duration-300 ${
-                expanded
+              className={`flex items-center rounded-md  font-semibold transition-all duration-300 ${expanded
                   ? "h-11 w-full gap-3 px-4"
                   : `${iconButtonSize} mx-auto justify-center`
-              } ${
-                active
+                } ${active
                   ? "bg-dark-blue text-white"
                   : "bg-light-blue/45 text-black hover:bg-light-blue"
-              }`}
+                }`}
               title={item.label}
             >
-              <span className="h-5 w-5 shrink-0">{item.icon("h-5 w-5")}</span>
+              <span className={`h-6 w-6 shrink-0 ${active && "invert"}`}><img src={item.icon}/></span>
               <span
                 className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity,transform] duration-300 ${
                   expanded
                     ? "max-w-44 translate-x-0 opacity-100"
                     : "max-w-0 -translate-x-2 opacity-0"
-                }`}
+                  }`}
               >
                 {item.label}
               </span>
