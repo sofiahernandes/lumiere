@@ -67,14 +67,14 @@ export function Sidebar({ expanded, onToggle }: SidebarProps) {
   const iconButtonSize = "h-11 w-11";
 
   return (
-    <aside className="panel w-full p-3 transition-all duration-300 md:min-h-[calc(100vh-2rem)]">
+    <aside className="w-full p-3 transition-all duration-300">
       <div
         className={`flex items-start ${expanded ? "justify-between" : "justify-center"}`}
       >
         <div
-          className={`overflow-hidden transition-[max-width,opacity] duration-200 ${
+          className={`overflow- transition-[max-width,opacity] duration-200 ${
             expanded
-              ? "max-w-52 opacity-100"
+              ? "max-w-62 opacity-100"
               : "max-w-0 opacity-0"
           }`}
         >
@@ -100,7 +100,7 @@ export function Sidebar({ expanded, onToggle }: SidebarProps) {
         </button>
       </div>
 
-      <nav className="mt-4 flex flex-col gap-2">
+      <nav className="mt-6 flex flex-col gap-2">
         {items.map((item) => {
           const active = pathname === item.href;
           return (
@@ -122,7 +122,7 @@ export function Sidebar({ expanded, onToggle }: SidebarProps) {
               <span
                 className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity,transform] duration-300 ${
                   expanded
-                    ? "max-w-40 translate-x-0 opacity-100"
+                    ? "max-w-44 translate-x-0 opacity-100"
                     : "max-w-0 -translate-x-2 opacity-0"
                 }`}
               >

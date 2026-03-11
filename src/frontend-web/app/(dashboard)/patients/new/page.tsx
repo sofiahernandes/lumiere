@@ -107,7 +107,7 @@ export default function AddPatientPage() {
           />
           <button
             type="submit"
-            className="col-span-full mt-3 rounded-md bg-dark-blue p-4 font-semibold text-white"
+            className="col-span-full mt-3 rounded-md bg-dark-blue p-4 font-semibold text-white hover:opacity-70 transition duration-300 ease-in-out"
           >
             Cadastrar paciente
           </button>
@@ -146,7 +146,7 @@ export default function AddPatientPage() {
                   <td className="py-2">
                     <button
                       onClick={() => removePatient(patient.id)}
-                      className="rounded-md bg-light-salmon px-3 py-1"
+                      className="rounded-md bg-light-salmon px-3 py-1 hover:opacity-70 transition duration-300 ease-in-out"
                     >
                       Excluir
                     </button>

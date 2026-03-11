@@ -3,7 +3,7 @@
 
 :root {
   --light-blue: #C2D3EA;
-  --dark-blue: #516991;
+  --dark-blue: #496688;
   --salmon: #DB5B52;
   --light-salmon: #FFD8CF;
   --neutral: #F8F8F8;
@@ -80,7 +80,7 @@ h2 {
 
 .panel {
   border-radius: 0.75rem;
-  background: #ffffff;
+  background: #FDFDFD;
   border: 1px solid color-mix(in srgb, var(--dark-blue) 18%, white);
 }
 

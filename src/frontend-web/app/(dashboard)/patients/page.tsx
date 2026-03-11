@@ -81,7 +81,7 @@ export default function PatientsPage() {
           />
         </div>
 
-        <div className="mt-4 overflow-x-auto">
+        <div className="mt-4 overflow-x-auto max-h-68 no-scrollbar">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-slate-200">
@@ -90,10 +90,14 @@ export default function PatientsPage() {
             </thead>
             <tbody>
               {filteredPatients.map((patient) => (
-                <tr key={patient.id} className="flex justify-between border-b border-slate-100">
+                <tr
+                  key={patient.id}
+                  className="flex justify-between border-b border-slate-100"
+                >
                   <td className="py-3">
                     <button
                       onClick={() => setSelectedId(patient.id)}
+                      className="hover:opacity-70 transition duration-300 ease-in-out"
                     >
                       {patient.firstName} {patient.lastName}
                     </button>
@@ -102,7 +106,7 @@ export default function PatientsPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => deletePatient(patient.id)}
-                        className="rounded-md bg-light-salmon px-3 py-1"
+                        className="rounded-md bg-light-salmon px-3 py-1 hover:opacity-70 transition duration-300 ease-in-out"
                       >
                         Excluir
                       </button>
@@ -115,45 +119,47 @@ export default function PatientsPage() {
         </div>
       </div>
 
-      <div className="panel col-span-4 p-5 md:col-span-5">
+      <div className="panel col-span-4 p-5 md:col-span-5 md:flex md:flex-col">
         <h2 className="text-xl">Prontuário e Evolução</h2>
         {selectedPatient ? (
-          <div className="mt-3 space-y-3">
-            <p>
-              <span className="font-semibold">Paciente:</span>{" "}
-              {selectedPatient.firstName} {selectedPatient.lastName}
-            </p>
-            <p>
-              <span className="font-semibold">Diagnóstico:</span>{" "}
-              {selectedPatient.diagnosis}
-            </p>
-            <p>
-              <span className="font-semibold">Última sessão:</span>{" "}
-              {selectedPatient.lastSession}
-            </p>
-            <p>
-              <span className="font-semibold">Escala média de dor:</span>{" "}
-              {selectedPatient.painLevel}/10
-            </p>
-            <div>
-              <p className="font-semibold">Aderência ao plano</p>
-              <div className="h-3 rounded-full bg-neutral-200">
-                <div
-                  className="h-3 rounded-full bg-black/70"
-                  style={{ width: `${selectedPatient.adherence}%` }}
-                />
-              </div>
-              <p className=" text-slate-600">
-                {selectedPatient.adherence}% dos exercícios foram completados
+          <div className="mt-3 flex flex-1 flex-col justify-between">
+            <div className="flex flex-col gap-y-3">
+              <p>
+                <span className="font-semibold">Paciente:</span>{" "}
+                {selectedPatient.firstName} {selectedPatient.lastName}
               </p>
+              <p>
+                <span className="font-semibold">Diagnóstico:</span>{" "}
+                {selectedPatient.diagnosis}
+              </p>
+              <p>
+                <span className="font-semibold">Última sessão:</span>{" "}
+                {selectedPatient.lastSession}
+              </p>
+              <p>
+                <span className="font-semibold">Escala média de dor:</span>{" "}
+                {selectedPatient.painLevel}/10
+              </p>
+              <div>
+                <p className="font-semibold">Aderência ao plano</p>
+                <div className="h-3 rounded-full bg-neutral-200">
+                  <div
+                    className="h-3 rounded-full bg-black/70"
+                    style={{ width: `${selectedPatient.adherence}%` }}
+                  />
+                </div>
+                <p className="text-slate-600">
+                  {selectedPatient.adherence}% dos exercícios foram completados
+                </p>
+              </div>
             </div>
-            <button className="rounded-md bg-dark-blue px-4 py-2 text-white w-full">
-              Acessar prontuario completo
+            <button className="rounded-md bg-dark-blue px-4 py-2 text-white w-full hover:opacity-70 transition duration-300 ease-in-out">
+              Acessar prontuário completo
             </button>
           </div>
         ) : (
           <p className="mt-3  text-slate-500">
-            Selecione um paciente para visualizar o prontuario.
+            Selecione um paciente para visualizar o prontuário.
           </p>
         )}
       </div>
@@ -198,7 +204,7 @@ export default function PatientsPage() {
             className="col-span-4 rounded-md border border-slate-300 px-3 py-2 md:col-span-4"
           />
           <button
-            className="col-span-4 rounded-md bg-dark-blue px-4 py-2 font-semibold text-white md:col-span-2"
+            className="col-span-4 rounded-md bg-dark-blue px-4 py-2 font-semibold text-white md:col-span-2 hover:opacity-70 transition duration-300 ease-in-out"
             type="submit"
           >
             Adicionar
