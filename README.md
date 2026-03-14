@@ -8,13 +8,16 @@
 <br/>
 
 ## Integrantes do Grupo
-[Analice Coimbra Carneiro](https://github.com/AnaliceCoimbra/)  
+[Analice Coimbra Carneiro](https://github.com/AnaliceCoimbra)  
 [Mariah Alice Pimentel Lôbo Pereira](https://github.com/alicelobwp)  
 [Sofia Botechia Hernandes](https://github.com/sofiahernandes)  
 [Victória Duarte Vieira Azevedo](https://github.com/viick04)
 
 ## Professores Orientadores
--
+[Katia Bossi](https://www.linkedin.com/in/katia-bossi)  
+[Marco Aurélio](https://www.linkedin.com/in/marco-aurelio-lima-barbosa)  
+[Victor Rosetti](https://www.linkedin.com/in/victorbarq)  
+[Rodrigo da Rosa](https://www.linkedin.com/in/rodrigo-da-rosa-phd/)  
 <br/>
 
 # Descrição
