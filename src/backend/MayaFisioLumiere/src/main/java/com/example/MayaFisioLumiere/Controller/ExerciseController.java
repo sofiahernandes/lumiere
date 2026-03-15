@@ -1,4 +1,4 @@
-package com.example.MayaFisioLumiere.controller;
+package com.example.MayaFisioLumiere.Controller;
 
 import com.example.MayaFisioLumiere.Domain.Exercises.ExerciseRequestDTO;
 import com.example.MayaFisioLumiere.Domain.Exercises.ExerciseResponseDTO;

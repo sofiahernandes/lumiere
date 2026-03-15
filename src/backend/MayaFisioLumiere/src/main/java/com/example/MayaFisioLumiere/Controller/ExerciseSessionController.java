@@ -1,4 +1,4 @@
-package com.example.MayaFisioLumiere.controller;
+package com.example.MayaFisioLumiere.Controller;
 
 import com.example.MayaFisioLumiere.Domain.ExerciseSession.ExerciseSessionRequestDTO;
 import com.example.MayaFisioLumiere.Domain.ExerciseSession.ExerciseSessionResponseDTO;
@@ -8,7 +8,6 @@ import com.example.MayaFisioLumiere.entity.ExerciseSessionEntity;
 import com.example.MayaFisioLumiere.repository.ExerciseSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

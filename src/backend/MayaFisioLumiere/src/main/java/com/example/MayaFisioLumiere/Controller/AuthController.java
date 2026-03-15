@@ -1,4 +1,4 @@
-package com.example.MayaFisioLumiere.controller;
+package com.example.MayaFisioLumiere.Controller;
 
 import com.example.MayaFisioLumiere.Services.AdminService;
 import com.example.MayaFisioLumiere.entity.AdminEntity;
