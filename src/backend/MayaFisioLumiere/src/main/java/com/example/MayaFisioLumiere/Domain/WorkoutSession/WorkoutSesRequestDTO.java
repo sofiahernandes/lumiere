@@ -1,4 +1,8 @@
 package com.example.MayaFisioLumiere.Domain.WorkoutSession;
 
-public record WorkoutSesRequestDTO() {
+public record WorkoutSesRequestDTO(
+        String weekDay,
+        Long patient,
+        Long exercise
+) {
 }

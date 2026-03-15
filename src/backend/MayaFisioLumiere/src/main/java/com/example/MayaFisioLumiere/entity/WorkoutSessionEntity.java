@@ -9,7 +9,7 @@ import lombok.Setter;
 import static jakarta.persistence.GenerationType.*;
 
 @Entity
-@Table(name="workoutsession")
+@Table(name="workoutSession")
 @Setter
 @Getter
 @NoArgsConstructor
@@ -18,7 +18,7 @@ public class WorkoutSessionEntity {
 
     @GeneratedValue(strategy = IDENTITY)
     @Id
-    private Long workoutsession_id;
+    private Long workoutSession_id;
 
     @Column(nullable = false)
     private String weekDay;
