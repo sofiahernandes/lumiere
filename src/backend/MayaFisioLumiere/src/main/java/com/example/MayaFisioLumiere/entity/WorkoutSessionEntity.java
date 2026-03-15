@@ -23,8 +23,8 @@ public class WorkoutSessionEntity {
     @Column(nullable = false)
     private String weekDay;
 
-    @Column(nullable = false)
-    private int checked = 0;
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private int checked;
 
     @ManyToOne
     @JoinColumn(name="patient_id",nullable = false)
