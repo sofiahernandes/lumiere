@@ -1,7 +1,7 @@
-package com.example.MayaFisioLumiere.Repository;
+package com.example.MayaFisioLumiere.repository;
 
 
-import com.example.MayaFisioLumiere.Entity.ExerciseEntity;
+import com.example.MayaFisioLumiere.entity.ExerciseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

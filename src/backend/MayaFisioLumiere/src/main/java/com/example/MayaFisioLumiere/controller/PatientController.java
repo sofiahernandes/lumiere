@@ -1,10 +1,10 @@
-package com.example.MayaFisioLumiere.Controller;
+package com.example.MayaFisioLumiere.controller;
 
 import com.example.MayaFisioLumiere.Domain.Patient.PatientRequestDTO;
 import com.example.MayaFisioLumiere.Domain.Patient.PatientResponseDTO;
 import com.example.MayaFisioLumiere.Services.PatientService;
-import com.example.MayaFisioLumiere.Entity.PatientEntity;
-import com.example.MayaFisioLumiere.Repository.PatientRepository; // importando para poder usar o auto-wired
+import com.example.MayaFisioLumiere.entity.PatientEntity;
+import com.example.MayaFisioLumiere.repository.PatientRepository; // importando para poder usar o auto-wired
 import org.springframework.beans.factory.annotation.Autowired; // necessário para salvar as coisas dentro do banco de dados
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +18,8 @@ public class PatientController {
 
     @Autowired
     private PatientRepository patientRepository; // conecta o controller ao banco de dados hospedado
+
+    @Autowired
     private PatientService patientService;
 
     @GetMapping("/getAllPatients")
@@ -52,8 +54,8 @@ public class PatientController {
         }
     }
 
-    @DeleteMapping("/delete/patient_id") // deletando paciente por email
-    public ResponseEntity<?> deletePatient(@PathVariable UUID patiend_id) {
+    @DeleteMapping("/delete/{patient_id}") // deletando paciente por email
+    public ResponseEntity<?> deletePatient(@PathVariable("patient_id") UUID patiend_id) {
         try {
             patientRepository.deleteById(patiend_id);
             return ResponseEntity.ok("Paciente deletado com sucesso.");

@@ -2,14 +2,14 @@ package com.example.MayaFisioLumiere.Services;
 
 import com.example.MayaFisioLumiere.Domain.ExerciseSession.ExerciseSessionRequestDTO;
 import com.example.MayaFisioLumiere.Domain.ExerciseSession.ExerciseSessionResponseDTO;
-import com.example.MayaFisioLumiere.Entity.ExerciseEntity;
-import com.example.MayaFisioLumiere.Entity.ExerciseSessionEntity;
-import com.example.MayaFisioLumiere.Entity.PatientEntity;
-import com.example.MayaFisioLumiere.Entity.WorkoutSessionEntity;
-import com.example.MayaFisioLumiere.Repository.ExerciseSessionRepository;
-import com.example.MayaFisioLumiere.Repository.ExercisesRepository;
-import com.example.MayaFisioLumiere.Repository.PatientRepository;
-import com.example.MayaFisioLumiere.Repository.WorkoutSessionRepository;
+import com.example.MayaFisioLumiere.entity.ExerciseEntity;
+import com.example.MayaFisioLumiere.entity.ExerciseSessionEntity;
+import com.example.MayaFisioLumiere.entity.PatientEntity;
+import com.example.MayaFisioLumiere.entity.WorkoutSessionEntity;
+import com.example.MayaFisioLumiere.repository.ExerciseSessionRepository;
+import com.example.MayaFisioLumiere.repository.ExercisesRepository;
+import com.example.MayaFisioLumiere.repository.PatientRepository;
+import com.example.MayaFisioLumiere.repository.WorkoutSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,16 +37,28 @@ public class ExerciseSessionService {
                 ))
                 .collect(Collectors.toList());
     }
+
+
     public ExerciseSessionEntity createExerciseSession(ExerciseSessionRequestDTO data){
         ExerciseSessionEntity newexerciseSession = new ExerciseSessionEntity();
+
         PatientEntity patient = patientRepository.findById(data.patient_id()) //buscando paciente pelo id
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
         newexerciseSession.setPatient(patient);
+
         ExerciseEntity exercise = exercisesRepository.findById(data.exercise_id()) //buscando exercício pelo id
                 .orElseThrow(() -> new RuntimeException("Exercício não encontrado"));
+
         newexerciseSession.setExercise(exercise);
-        WorkoutSessionEntity workoutSession = workoutSessionRepository.findById(data.workoutsession_id()) .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
-        newexerciseSession.setWorkoutSession_id(workoutSession);
+
+        WorkoutSessionEntity workoutSession = workoutSessionRepository.findById(data.workoutSession())
+                .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
+
+        newexerciseSession.setWorkoutSession(workoutSession);
+        newexerciseSession.setSerie(data.serie());
+        newexerciseSession.setRepetitions(data.repetitions());
+
         return exerciseSessionRepository.save(newexerciseSession);
     }
     //atualizar a sessão de exercicios
@@ -66,20 +78,23 @@ public class ExerciseSessionService {
             session.setExercise(exercise);
         }
 
-        if (data.workoutsession_id() != null) {
-            WorkoutSessionEntity workoutSession = workoutSessionRepository.findById(data.workoutsession_id())
+        if (data.workoutSession() != null) {
+            WorkoutSessionEntity workoutSession = workoutSessionRepository.findById(data.workoutSession())
                     .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
             session.setWorkoutSession(workoutSession);
-        } //quando criar certinho o workout session ver se ainda está dando erro aqui
-
+        }
         return exerciseSessionRepository.save(session);
     }
 
     public void deleteExerciseSession(Long exercisession_id) {
-        ExerciseSessionEntity session = exerciseSessionRepository.findById( exercisession_id)
-                .orElseThrow(() -> new RuntimeException("Sessão não encontrada para exclusão"));
-
-        exerciseSessionRepository.delete(session);
-    }
+         try {
+            if(!exerciseSessionRepository.existsById(exercisession_id)){
+                throw new RuntimeException("Sessão de Exercicios não encontrada");
+            }
+             exerciseSessionRepository.deleteById(exercisession_id);
+         }catch (Exception err) {
+            throw new RuntimeException("Erro ao deletar Sessão de Exercícios", err);
+            }
+}
 
 }

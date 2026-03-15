@@ -1,4 +1,4 @@
-package com.example.MayaFisioLumiere.Entity;
+package com.example.MayaFisioLumiere.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,10 +33,10 @@ public class PatientEntity {
     @Column( nullable = false)
     private String password;
 
-    @Column(unique = false, nullable = false)
+    @Column(nullable = false)
     private int patientAge;
 
     @Column(nullable = false)
-    private String status;
+    private String status = "INATIVO";
 
 }

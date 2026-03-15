@@ -1,4 +1,4 @@
-package com.example.MayaFisioLumiere.Entity;
+package com.example.MayaFisioLumiere.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
