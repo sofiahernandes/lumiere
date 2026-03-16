@@ -1,5 +1,6 @@
 package com.example.MayaFisioLumiere.entity;
 
+import com.example.MayaFisioLumiere.entity.role.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
