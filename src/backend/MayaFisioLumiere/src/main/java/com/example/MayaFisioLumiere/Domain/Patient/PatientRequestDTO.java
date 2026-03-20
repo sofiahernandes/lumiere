@@ -6,5 +6,5 @@ public record PatientRequestDTO(
         String cpf,
         String email,
         String password,
-        int patientAge
+        String birthDate
 ) { }
