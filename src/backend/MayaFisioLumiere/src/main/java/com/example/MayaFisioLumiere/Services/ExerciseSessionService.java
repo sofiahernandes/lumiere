@@ -13,6 +13,7 @@ import com.example.MayaFisioLumiere.repository.WorkoutSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,6 +92,19 @@ public class ExerciseSessionService {
         }
         return exerciseSessionRepository.save(session);
     }
+
+    //Atualizar o feelPain da exerciseSession na visão do Patient quando ele terminar o exercício
+
+    public ExerciseSessionEntity updateExerciseSessionPain(Long exercisesession_id, ExerciseSessionRequestDTO data) {
+        ExerciseSessionEntity session = exerciseSessionRepository.findById(exercisesession_id)
+                .orElseThrow(() -> new RuntimeException("Sessão de exercício não encontrada"));
+
+            if (data.feelPain() != null) {
+                session.setFeelPain(data.feelPain());
+            }
+        return exerciseSessionRepository.save(session);
+    }
+
 
     public void deleteExerciseSession(Long exercisession_id) {
          try {
