@@ -8,6 +8,10 @@ type FormState = {
   lastName: string;
   birthDate: string;
   cpf: string;
+  cellPhone: string;
+  gender: string;
+  height: string;
+  weight: string;
 };
 
 const emptyForm: FormState = {
@@ -15,11 +19,20 @@ const emptyForm: FormState = {
   lastName: "",
   birthDate: "",
   cpf: "",
+  cellPhone: "",
+  gender: "",
+  height: "",
+  weight: "",
 };
 
 export default function AddPatientPage() {
   const { patients, addPatient, removePatient } = usePatients();
   const [form, setForm] = useState<FormState>(emptyForm);
+
+  function handleChange(field: keyof FormState) {
+    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+      setForm((prev) => ({ ...prev, [field]: event.target.value }));
+  }
 
   async function submitPatient(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,12 +40,6 @@ export default function AddPatientPage() {
     if (!form.firstName || !form.lastName || !form.birthDate || !form.cpf)
       return;
 
-    // Calcular idade a partir da data de nascimento
-    const ageDiffMs = Date.now() - new Date(form.birthDate).getTime();
-    const ageDate = new Date(ageDiffMs);
-    const patientAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-
-    // Gerar credenciais dinamicamente para o backend
     const email = `${form.firstName.toLowerCase()}.${form.lastName.toLowerCase()}@lumiere.com`;
     const password = form.birthDate.split("-").reverse().join("");
 
@@ -40,9 +47,14 @@ export default function AddPatientPage() {
       name: form.firstName,
       surname: form.lastName,
       cpf: form.cpf,
-      email: email,
-      password: password,
-      patientAge: patientAge,
+      email,
+      password,
+      birthDate: form.birthDate,
+      status: "INATIVO",
+      cellPhone: form.cellPhone || null,
+      gender: form.gender || null,
+      height: form.height ? parseFloat(form.height) : null,
+      weight: form.weight ? parseFloat(form.weight) : null,
     });
 
     if (isSuccess) {
@@ -62,42 +74,74 @@ export default function AddPatientPage() {
           onSubmit={submitPatient}
           className="grid grid-cols-4 gap-3 md:grid-cols-12 mt-3"
         >
+          {/* Nome e Sobrenome */}
           <input
             value={form.firstName}
-            onChange={(event) =>
-              setForm((prev) => ({ ...prev, firstName: event.target.value }))
-            }
+            onChange={handleChange("firstName")}
             placeholder="Nome"
             className="col-span-4 rounded-md border border-slate-300 px-3 py-2 md:col-span-6"
             required
           />
           <input
             value={form.lastName}
-            onChange={(event) =>
-              setForm((prev) => ({ ...prev, lastName: event.target.value }))
-            }
+            onChange={handleChange("lastName")}
             placeholder="Sobrenome"
             className="col-span-4 rounded-md border border-slate-300 px-3 py-2 md:col-span-6"
             required
           />
+
+          {/* Data de Nascimento e CPF */}
           <input
             type="date"
             value={form.birthDate}
-            onChange={(event) =>
-              setForm((prev) => ({ ...prev, birthDate: event.target.value }))
-            }
+            onChange={handleChange("birthDate")}
             className="col-span-4 rounded-md border border-slate-300 px-3 py-2 md:col-span-5"
             required
           />
           <input
             value={form.cpf}
-            onChange={(event) =>
-              setForm((prev) => ({ ...prev, cpf: event.target.value }))
-            }
+            onChange={handleChange("cpf")}
             placeholder="CPF"
             className="col-span-4 rounded-md border border-slate-300 px-3 py-2 md:col-span-7"
             required
           />
+
+          {/* Telefone e Gênero */}
+          <input
+            value={form.cellPhone}
+            onChange={handleChange("cellPhone")}
+            placeholder="Celular (WhatsApp)"
+            className="col-span-4 rounded-md border border-slate-300 px-3 py-2 md:col-span-6"
+          />
+          <select
+            value={form.gender}
+            onChange={handleChange("gender")}
+            className="col-span-4 rounded-md border border-slate-300 px-3 py-2 md:col-span-6 text-slate-500"
+          >
+            <option value="">Gênero</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMININO">Feminino</option>
+            <option value="OUTRO">Outro</option>
+          </select>
+
+          {/* Altura e Peso */}
+          <input
+            type="number"
+            step="0.01"
+            value={form.height}
+            onChange={handleChange("height")}
+            placeholder="Altura (m)"
+            className="col-span-4 rounded-md border border-slate-300 px-3 py-2 md:col-span-6"
+          />
+          <input
+            type="number"
+            step="0.1"
+            value={form.weight}
+            onChange={handleChange("weight")}
+            placeholder="Peso (kg)"
+            className="col-span-4 rounded-md border border-slate-300 px-3 py-2 md:col-span-6"
+          />
+
           <button
             type="submit"
             className="col-span-full mt-3 rounded-md bg-blue p-4 font-semibold text-neutral hover:opacity-70 transition duration-300 ease-in-out"
@@ -115,6 +159,8 @@ export default function AddPatientPage() {
           <br />
           <span className="font-semibold">Senha</span>: DDMMYYYY (data de
           nascimento)
+          <br />
+          <span className="font-semibold">Status inicial</span>: INATIVO
         </p>
       </aside>
 
@@ -126,13 +172,14 @@ export default function AddPatientPage() {
               <tr className="border-b border-slate-200">
                 <th className="py-2">Nome Completo</th>
                 <th className="py-2">Email</th>
+                <th className="py-2">Status</th>
                 <th className="py-2">Ação</th>
               </tr>
             </thead>
             <tbody>
               {patients.map((patient) => (
                 <tr
-                  key={patient.patient_id}
+                  key={patient.patient_ID}
                   className="border-b border-slate-100"
                 >
                   <td className="py-2">
@@ -140,8 +187,18 @@ export default function AddPatientPage() {
                   </td>
                   <td className="py-2">{patient.email}</td>
                   <td className="py-2">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-sm font-medium ${patient.status === "ATIVO"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-slate-100 text-slate-500"
+                        }`}
+                    >
+                      {patient.status}
+                    </span>
+                  </td>
+                  <td className="py-2">
                     <button
-                      onClick={() => removePatient(patient.patient_id)}
+                      onClick={() => removePatient(patient.patient_ID)}
                       className="rounded-md bg-neutral-200 px-3 py-1 hover:opacity-70 transition duration-300 ease-in-out"
                     >
                       Excluir
