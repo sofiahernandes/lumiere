@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController //tipo da classe que vamos fazer
-@RequestMapping("/api/patients")  //rota principal desse controller, sempre que formos adicionar uma rota nesse controle vai ser esse caminho +/nomeDaRota
+@RequestMapping("/api/patient")  //rota principal desse controller, sempre que formos adicionar uma rota nesse controle vai ser esse caminho +/nomeDaRota
 public class PatientController {
 
     @Autowired
