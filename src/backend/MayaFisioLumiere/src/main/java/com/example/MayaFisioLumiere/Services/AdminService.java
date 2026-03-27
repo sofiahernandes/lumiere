@@ -3,30 +3,65 @@ package com.example.MayaFisioLumiere.Services;
 import com.example.MayaFisioLumiere.Domain.Admin.AdminRequestDTO;
 import com.example.MayaFisioLumiere.Domain.Admin.AdminResponseDTO;
 import com.example.MayaFisioLumiere.entity.AdminEntity;
+import com.example.MayaFisioLumiere.entity.role.UserRole;
 import com.example.MayaFisioLumiere.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+//remover a password do admin da response, fazer a parte de terminar a autenticação por meio das entities que
 @Service
-public class AdminService {
+public class AdminService  {
 
     //Criar novos perfis de Administradores, tanto da Maya quanto ela criar de outros profissionais
-    //Rota http://localhost:8081/api/adminAccess/create-admin
     @Autowired
     private AdminRepository adminRepository;
-    public AdminEntity createAdmin(AdminRequestDTO data){
+
+    @Autowired
+    private TokenService tokenService; //para criar o jwt nas sessões de login, logout e register de admin
+
+    @Autowired
+    private PasswordEncoder bcrypt;
+
+    @Autowired
+    private AuthenticationManager authManager;
+
+    @Autowired
+    private BlacklistService blacklistService;
+
+    public AdminResponseDTO createAdmin(AdminRequestDTO data) {
+        if (this.adminRepository.findByAdminEmail(data.adminEmail()).isPresent()) {
+            throw new RuntimeException("Este e-mail já está cadastrado.");
+        } // se já tiver um email cadastrado ele dá um errinho pra não ter duplicatas no backend
+
         AdminEntity newAdmin = new AdminEntity();
         newAdmin.setAdminName(data.adminName());
         newAdmin.setAdminEmail(data.adminEmail());
-        newAdmin.setAdminPassword(data.adminPassword());
 
-        return adminRepository.save(newAdmin);
+        String encryptedPassword = bcrypt.encode(data.adminPassword());
+        newAdmin.setAdminPassword(encryptedPassword);
+
+        newAdmin.setRole(UserRole.Admin);
+
+        newAdmin.setTotalMinutesUsedToday(0);
+        newAdmin.setLastAccessDate(java.time.LocalDate.now());
+
+        adminRepository.save(newAdmin);
+
+        return new AdminResponseDTO(
+                newAdmin.getAdminUser_ID(),
+                newAdmin.getAdminName(),
+                newAdmin.getAdminEmail() // não pode retornar mais a senha quando for pro banco, questões de segurança
+
+        );
     }
 
     //Atualizar email, nome ou senha do administrador, procurando o admin pelo ID dele
@@ -43,15 +78,15 @@ public class AdminService {
             admin.setAdminEmail((data.adminEmail()));
         }
 
-        if(data.adminPassword() != null) {
-            admin.setAdminPassword(data.adminPassword());
-        }
+            // senha do admin com bcrypt já
+            if (data.adminPassword() != null) {
+                admin.setAdminPassword(bcrypt.encode(data.adminPassword()));
+            }
         adminRepository.save(admin);
         return new AdminResponseDTO(
                 admin.getAdminUser_ID(),
                 admin.getAdminName(),
-                admin.getAdminEmail(),
-                admin.getAdminPassword()
+                admin.getAdminEmail()
         );
         } catch (Exception err) {
             throw new RuntimeException("Erro ao atualizar dados do administrador", err);
@@ -67,9 +102,8 @@ public class AdminService {
         return adminsPage.map(admin -> new AdminResponseDTO(
                 admin.getAdminUser_ID(),
                 admin.getAdminName(),
-                admin.getAdminEmail(),
-                admin.getAdminPassword() //REMOVER DEPOIS DA AUTENTICAÇÃO E HASH
-            )
+                admin.getAdminEmail()
+                )
         ).stream().toList();
         } catch (Exception err) {
             throw new RuntimeException("Erro ao buscar administradores", err);
@@ -86,8 +120,7 @@ public class AdminService {
         return new AdminResponseDTO(
                 admin.getAdminUser_ID(),
                 admin.getAdminName(),
-                admin.getAdminEmail(),
-                admin.getAdminPassword() //REMOVER DEPOIS DA AUTENTICAÇÃO E HASH
+                admin.getAdminEmail()
         );
         } catch (Exception err) {
             throw new RuntimeException("Administrador não encontrado", err);
@@ -104,8 +137,7 @@ public class AdminService {
                 new AdminResponseDTO(
                         admin.getAdminUser_ID(),
                         admin.getAdminName(),
-                        admin.getAdminEmail(),
-                        admin.getAdminPassword() //REMOVER DEPOIS DA AUTENTICAÇÃO E HASH
+                        admin.getAdminEmail()
                 )
         ).toList();
         } catch (Exception err) {
@@ -125,19 +157,42 @@ public class AdminService {
         }
     }
 
+    // service para login criando um jwt quando for bem sucediddo
+   /* public String loginAdmin(String email, String password) {
+        //validação por meio da classe de UserDetails debaixo dos panos
+        var usernamePassword = new UsernamePasswordAuthenticationToken(email, password);
+        var auth = this.authManager.authenticate(usernamePassword);
 
-    //LOGIN do administrador ----TESTAR
+        // autenticação bem sucedida -> gera token do usuário
+        return tokenService.generateToken((AdminEntity) auth.getPrincipal());
+    } */
+    public String loginAdmin(String email, String password) {
+        try {
+            AdminEntity admin = adminRepository.findByAdminEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-    public AdminEntity loginAdmin(String adminEmail, String adminPassword){
-        Optional<AdminEntity> adminLogin = adminRepository.findByAdminEmail(adminEmail);
-            if (adminLogin.isPresent()) {
-                AdminEntity admin = adminLogin.get();
-                if(admin.getAdminPassword().equals(adminPassword)){
-                    return admin;
-                }
+            if (!bcrypt.matches(password, admin.getAdminPassword())) {
+                throw new RuntimeException("Senha inválida");
             }
-        throw new RuntimeException("Email ou senha inválidos");
+
+            return tokenService.generateToken(admin);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao fazer login: " + e.getMessage(), e);
+        }
     }
 
+    // toda a vez que der logout, o token vai pra uma denyList que impede de esse mesmo token ser usado denovo
+    public void logoutAdmin(String token, String authorizationHeader){
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Token inválido para logout");
+        }
+
+        token = authorizationHeader.replace("Bearer ", "");
+        // data de expiração do token
+        Long expiration = tokenService.getExpirationDate(token);
+
+        blacklistService.addTokenToBlacklist(token, expiration);
+    }
 
 }

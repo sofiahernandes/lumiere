@@ -1,12 +1,17 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export type PatientResponse = {
-  patient_id: string;
+  patient_ID: string;
   name: string;
   surname: string;
   email: string;
+  cpf: string;
   status: string;
-  password?: string;
+  birthDate?: string;
+  cellPhone?: string | null;
+  gender?: string | null;
+  height?: number | null;
+  weight?: number | null;
 };
 
 export type PatientRequest = {
@@ -15,79 +20,65 @@ export type PatientRequest = {
   cpf: string;
   email: string;
   password: string;
-  patientAge: number;
+  birthDate: string;
+  status: string;
+  cellPhone?: string | null;
+  gender?: string | null;
+  height?: number | null;
+  weight?: number | null;
 };
 
 export function usePatients() {
   const [patients, setPatients] = useState<PatientResponse[]>([]);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-  const API_USER = process.env.NEXT_PUBLIC_API_USER;
-  const API_PASS = process.env.NEXT_PUBLIC_API_PASS;
-
-  const basicAuth = useMemo(() => {
-    if (typeof window !== "undefined" && API_USER && API_PASS) {
-      return "Basic " + btoa(`${API_USER}:${API_PASS}`);
-    }
-    return "";
-  }, [API_USER, API_PASS]);
 
   const fetchPatients = useCallback(async () => {
-    if (!basicAuth) return;
     try {
-      const res = await fetch(`${API_URL}/api/patients/getAllPatients`, {
+      const res = await fetch(`${API_URL}/api/patient/getAllPatients`, {
         method: "GET",
         headers: {
-          Authorization: basicAuth,
           "Content-Type": "application/json",
         },
       });
       if (res.ok) {
-        const data = await res.json();
+        const data: PatientResponse[] = await res.json();
         setPatients(data);
       }
     } catch (error) {
       console.error("Erro ao buscar pacientes:", error);
     }
-  }, [API_URL, basicAuth]);
+  }, [API_URL]);
 
   useEffect(() => {
     let isMounted = true;
 
-    async function fetchPatients() {
-      if (!basicAuth) return;
+    async function load() {
       try {
-        const res = await fetch(`${API_URL}/api/patients/getAllPatients`, {
+        const res = await fetch(`${API_URL}/api/patient/getAllPatients`, {
           method: "GET",
           headers: {
-            Authorization: basicAuth,
             "Content-Type": "application/json",
           },
         });
         if (res.ok) {
-          const data = await res.json();
-          if (isMounted) {
-            setPatients(data);
-          }
+          const data: PatientResponse[] = await res.json();
+          if (isMounted) setPatients(data);
         }
       } catch (error) {
         console.error("Erro ao buscar pacientes:", error);
       }
     }
 
-    fetchPatients();
+    load();
+    return () => { isMounted = false; };
+  }, [API_URL]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [API_URL, basicAuth]);
-
-  const addPatient = async (newPatient: PatientRequest) => {
+  const addPatient = async (newPatient: PatientRequest): Promise<boolean> => {
     try {
-      const res = await fetch(`${API_URL}/api/patients/createPatient`, {
+      const res = await fetch(`${API_URL}/api/patient/createPatient`, {
         method: "POST",
         headers: {
-          Authorization: basicAuth,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newPatient),
@@ -95,38 +86,39 @@ export function usePatients() {
 
       if (res.ok) {
         const data = await res.json();
-        // The entity creation endpoint returns the full entity.
-        // We'll normalize it to fit the PatientResponse DTO expected by the UI.
         const formatted: PatientResponse = {
-          patient_id: data.patient_ID || data.patient_id,
+          patient_ID: data.patient_ID ?? data.patient_id,
           name: data.name,
           surname: data.surname,
           email: data.email,
+          cpf: data.cpf,
           status: data.status,
+          birthDate: data.birthDate,
+          cellPhone: data.cellPhone ?? null,
+          gender: data.gender ?? null,
+          height: data.height ?? null,
+          weight: data.weight ?? null,
         };
         setPatients((prev) => [formatted, ...prev]);
         return true;
-      } else {
-        const err = await res.text();
-        alert("Erro ao criar paciente: " + err);
-        return false;
       }
+
+      const err = await res.text();
+      alert("Erro ao criar paciente: " + err);
+      return false;
     } catch (error) {
       console.error("Erro na requisição:", error);
       return false;
     }
   };
 
-  const removePatient = async (id: string) => {
+  const removePatient = async (id: string): Promise<boolean> => {
     try {
-      const res = await fetch(`${API_URL}/api/patients/delete/${id}`, {
+      const res = await fetch(`${API_URL}/api/patient/delete/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: basicAuth,
-        },
       });
       if (res.ok) {
-        setPatients((prev) => prev.filter((p) => p.patient_id !== id));
+        setPatients((prev) => prev.filter((p) => p.patient_ID !== id));
         return true;
       }
       return false;
@@ -136,9 +128,5 @@ export function usePatients() {
     }
   };
 
-  return {
-    patients,
-    addPatient,
-    removePatient,
-  };
+  return { patients, fetchPatients, addPatient, removePatient };
 }

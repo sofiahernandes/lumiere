@@ -12,17 +12,9 @@ export type ExerciseRequest = Omit<Exercise, "exercise_id">;
 
 export function useExercises() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [reload, setReload] = useState(false);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const API_USER = process.env.NEXT_API_USER;
-  const API_PASS = process.env.NEXT_API_PASS;
-
-  const basicAuth = useMemo(() => {
-    if (typeof window !== "undefined" && API_USER && API_PASS) {
-      return "Basic " + btoa(`${API_USER}:${API_PASS}`);
-    }
-    return "";
-  }, [API_USER, API_PASS]);
 
   useEffect(() => {
     async function fetchExercises() {
@@ -30,7 +22,6 @@ export function useExercises() {
         const res = await fetch(`${API_URL}/api/exercise/all?page=0&size=100`, {
           method: "GET",
           headers: {
-            Authorization: basicAuth,
             "Content-Type": "application/json",
           },
         });
@@ -43,17 +34,15 @@ export function useExercises() {
       }
     }
 
-    if (basicAuth) {
-      fetchExercises();
-    }
-  }, [API_URL, basicAuth]);
+    fetchExercises();
+
+  }, [API_URL, reload]);
 
   const addExercise = async (newExerciseData: ExerciseRequest) => {
     try {
       const res = await fetch(`${API_URL}/api/exercise/create-exercise`, {
         method: "POST",
         headers: {
-          Authorization: basicAuth,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newExerciseData),
@@ -61,13 +50,14 @@ export function useExercises() {
 
       if (res.ok) {
         const data = await res.json();
-        
+
         const newExercise: Exercise = {
           ...data,
           exercise_id: data.exercise_id || data.exercise_ID,
         };
-        
+
         setExercises((prev) => [newExercise, ...prev]);
+        setReload(prev => !prev);
         return true;
       } else {
         alert("Erro ao criar exercício.");
@@ -84,16 +74,14 @@ export function useExercises() {
       const res = await fetch(
         `${API_URL}/api/exercise/deleteExerciseId/${id}`,
         {
-          method: "DELETE",
-          headers: {
-            Authorization: basicAuth,
-          },
+          method: "DELETE"
         },
       );
       if (res.ok) {
         setExercises((prev) =>
           prev.filter((exercise) => exercise.exercise_id !== id),
         );
+        setReload(prev => !prev);
       }
     } catch (error) {
       console.error("Erro ao deletar exercício:", error);
