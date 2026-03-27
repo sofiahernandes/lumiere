@@ -16,19 +16,12 @@ export function useExercises() {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-
   useEffect(() => {
     async function fetchExercises() {
-      const token =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-      if (!token) return;
-
       try {
         const res = await fetch(`${API_URL}/api/exercise/all?page=0&size=100`, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
@@ -46,18 +39,10 @@ export function useExercises() {
   }, [API_URL, reload]);
 
   const addExercise = async (newExerciseData: ExerciseRequest) => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-    if (!token) {
-      alert("Usuário não autenticado");
-      return false;
-    }
     try {
       const res = await fetch(`${API_URL}/api/exercise/create-exercise`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newExerciseData),
@@ -85,22 +70,11 @@ export function useExercises() {
   };
 
   const removeExercise = async (id: number) => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-    if (!token) {
-      alert("Usuário não autenticado");
-      return false;
-    }
-
     try {
       const res = await fetch(
         `${API_URL}/api/exercise/deleteExerciseId/${id}`,
         {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          method: "DELETE"
         },
       );
       if (res.ok) {

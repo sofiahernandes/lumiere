@@ -1,21 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import Select from "react-select";
 import { initialSchedule } from "@/app/lib/mock-data";
 import { usePatients } from "@/app/hooks/useGetPatients";
-import { useExercises } from "@/app/hooks/useGetExercises"; // Integration with your exercises hook!
+import { useExercises, Exercise } from "@/app/hooks/useGetExercises";
+
 
 const daysOfWeek = [
-  "Segunda",
-  "Terça",
-  "Quarta",
-  "Quinta",
-  "Sexta",
-  "Sábado",
-  "Domingo",
+  "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo",
 ];
+
+type WorkoutSession = {
+  workoutSession_ID: string;
+  patient_ID: string;
+  weekDay: string;
+};
+
+type ExerciseSession = {
+  exerciseSession_ID: string;
+  workoutSession_ID: string;
+  patient_ID: string;
+  exercise_ID: string;
+  serie: string;
+};
 
 export default function PatientsPage() {
   const { patients, removePatient } = usePatients();
@@ -23,28 +31,15 @@ export default function PatientsPage() {
 
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState("");
-
   const [schedules, setSchedules] = useState(initialSchedule);
   const [scheduleForm, setScheduleForm] = useState({
     exerciseName: "",
     frequency: "",
   });
 
-  const [workoutSessions, setWorkoutSessions] = useState<
-    { workoutSession_ID: string; patient_ID: string; weekDay: string }[]
-  >([]);
-  const [exerciseSessions, setExerciseSessions] = useState<
-    {
-      exerciseSession_ID: string;
-      workoutSession_ID: string;
-      patient_ID: string;
-      exercise_ID: string;
-      serie: string;
-    }[]
-  >([]);
-
+  const [workoutSessions, setWorkoutSessions] = useState<WorkoutSession[]>([]);
+  const [exerciseSessions, setExerciseSessions] = useState<ExerciseSession[]>([]);
   const [selectedDay, setSelectedDay] = useState<string>(daysOfWeek[0]);
-  const [active, setActive] = useState<boolean>(false);
 
   const filteredPatients = useMemo(() => {
     return patients.filter((patient) => {
@@ -54,31 +49,31 @@ export default function PatientsPage() {
   }, [patients, query]);
 
   const selectedPatient =
-    patients.find((p) => p.patient_id === selectedId) ?? filteredPatients[0];
+    patients.find((p) => p.patient_ID === selectedId) ?? filteredPatients[0];
 
   function deletePatient(id: string) {
     removePatient(id);
     setSchedules((prev) => prev.filter((item) => item.patientId !== id));
     if (selectedId === id) {
-      const next = patients.find((p) => p.patient_id !== id);
-      setSelectedId(next?.patient_id ?? "");
+      const next = patients.find((p) => p.patient_ID !== id);
+      setSelectedId(next?.patient_ID ?? "");
     }
   }
 
   function submitSchedule(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!selectedPatient) return;
+    if (!selectedPatient || !scheduleForm.exerciseName) return;
 
-    const newWorkoutSession = {
+    const newWorkoutSession: WorkoutSession = {
       workoutSession_ID: `WS-${Date.now()}`,
-      patient_ID: selectedPatient.patient_id,
+      patient_ID: selectedPatient.patient_ID,
       weekDay: selectedDay,
     };
 
-    const newExerciseSession = {
+    const newExerciseSession: ExerciseSession = {
       exerciseSession_ID: `ES-${Date.now()}`,
       workoutSession_ID: newWorkoutSession.workoutSession_ID,
-      patient_ID: selectedPatient.patient_id,
+      patient_ID: selectedPatient.patient_ID,
       exercise_ID: scheduleForm.exerciseName,
       serie: scheduleForm.frequency,
     };
@@ -86,6 +81,10 @@ export default function PatientsPage() {
     setWorkoutSessions((prev) => [...prev, newWorkoutSession]);
     setExerciseSessions((prev) => [...prev, newExerciseSession]);
     setScheduleForm({ exerciseName: "", frequency: "" });
+  }
+
+  function getExerciseId(exercise: Exercise): string {
+    return String(exercise.exercise_id);
   }
 
   return (
@@ -114,26 +113,24 @@ export default function PatientsPage() {
             <tbody>
               {filteredPatients.map((patient) => (
                 <tr
-                  key={patient.patient_id}
+                  key={patient.patient_ID}
                   className="flex justify-between border-b border-slate-100"
                 >
                   <td className="py-3">
                     <button
-                      onClick={() => setSelectedId(patient.patient_id)}
+                      onClick={() => setSelectedId(patient.patient_ID)}
                       className="hover:opacity-70 focus:font-bold transition duration-300 ease-in-out"
                     >
                       {patient.name} {patient.surname}
                     </button>
                   </td>
                   <td className="py-3">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => deletePatient(patient.patient_id)}
-                        className="rounded-md bg-neutral-200 px-3 py-1 hover:opacity-70 transition duration-300 ease-in-out text-red-600"
-                      >
-                        Excluir
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => deletePatient(patient.patient_ID)}
+                      className="rounded-md bg-neutral-200 px-3 py-1 hover:opacity-70 transition duration-300 ease-in-out text-red-600"
+                    >
+                      Excluir
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -151,12 +148,44 @@ export default function PatientsPage() {
               {selectedPatient.name} {selectedPatient.surname}
             </p>
             <p>
-              <span className="font-semibold">Email associado:</span>{" "}
+              <span className="font-semibold">Email:</span>{" "}
               {selectedPatient.email}
             </p>
+            {selectedPatient.birthDate && (
+              <p>
+                <span className="font-semibold">Nascimento:</span>{" "}
+                {selectedPatient.birthDate}
+              </p>
+            )}
+            {selectedPatient.gender && (
+              <p>
+                <span className="font-semibold">Gênero:</span>{" "}
+                {selectedPatient.gender}
+              </p>
+            )}
+            {selectedPatient.cellPhone && (
+              <p>
+                <span className="font-semibold">Celular:</span>{" "}
+                {selectedPatient.cellPhone}
+              </p>
+            )}
+            {(selectedPatient.height || selectedPatient.weight) && (
+              <p>
+                <span className="font-semibold">Medidas:</span>{" "}
+                {selectedPatient.height && `${selectedPatient.height}m`}
+                {selectedPatient.height && selectedPatient.weight && " · "}
+                {selectedPatient.weight && `${selectedPatient.weight}kg`}
+              </p>
+            )}
             <p>
               <span className="font-semibold">Status:</span>{" "}
-              <span className="bg-blue/10 px-2 py-1 rounded text-sm text-blue">
+              <span
+                className={`px-2 py-1 rounded text-sm font-medium ${
+                  selectedPatient.status === "ATIVO"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-slate-100 text-slate-500"
+                }`}
+              >
                 {selectedPatient.status}
               </span>
             </p>
@@ -174,8 +203,7 @@ export default function PatientsPage() {
       <div className="col-span-4 p-5 md:col-span-12 space-y-4">
         <h2 className="text-xl">Calendário do Paciente Selecionado</h2>
 
-        {/* Tabs dos dias da semana */}
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-2 mt-4 flex-wrap">
           {daysOfWeek.map((day) => (
             <button
               key={day}
@@ -198,9 +226,7 @@ export default function PatientsPage() {
         >
           <Select
             options={exercises.map((exercise) => ({
-              value: String(
-                exercise.exercise_id || (exercise as any).exercise_ID,
-              ),
+              value: getExerciseId(exercise),
               label: exercise.title,
             }))}
             onChange={(selectedOption) =>
@@ -236,14 +262,11 @@ export default function PatientsPage() {
           {workoutSessions
             .filter(
               (ws) =>
-                ws.patient_ID === selectedPatient?.patient_id &&
+                ws.patient_ID === selectedPatient?.patient_ID &&
                 ws.weekDay === selectedDay,
             )
             .map((workoutSession) => (
-              <div
-                key={workoutSession.workoutSession_ID}
-                className="col-span-4"
-              >
+              <div key={workoutSession.workoutSession_ID} className="col-span-4">
                 {exerciseSessions
                   .filter(
                     (es) =>
@@ -251,9 +274,7 @@ export default function PatientsPage() {
                   )
                   .map((exerciseSession) => {
                     const exerciseMatch = exercises.find(
-                      (e) =>
-                        String(e.exercise_id || (e as any).exercise_ID) ===
-                        exerciseSession.exercise_ID,
+                      (e) => getExerciseId(e) === exerciseSession.exercise_ID,
                     );
                     return (
                       <article

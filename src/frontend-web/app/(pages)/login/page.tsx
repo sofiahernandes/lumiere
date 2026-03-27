@@ -10,9 +10,10 @@ export default function LoginPage() {
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
     try {
-      const res = await fetch("http://localhost:8081/api/auth/login/admin", {
+      const res = await fetch(`${apiUrl}/api/auth/login/admin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,10 +32,10 @@ export default function LoginPage() {
 
       const data = await res.json();
 
-      // 🔑 salva o token
+      // salva o token
       localStorage.setItem("token", data.token);
 
-      // 👉 redireciona
+      // redireciona
       router.push("/exercises");
     } catch (error) {
       console.error(error);

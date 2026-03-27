@@ -138,8 +138,6 @@ npm install
 4. Configure as variáveis de ambiente (exemplo `.env.example`)
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:8080 # ou sua URL hospedada
-NEXT_API_USER=seu_usuario
-NEXT_API_PASS=sua_senha
 ```
 
 5. Execute o servidor de desenvolvimento
