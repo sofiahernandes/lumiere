@@ -20,6 +20,13 @@
 [Rodrigo da Rosa](https://www.linkedin.com/in/rodrigo-da-rosa-phd/)  
 <br/>
 
+## Entregas das Disciplinas
+| Disciplina | Entrega 1 | Entrega 2 |  
+| :-------: | :------: | :-------: |
+| Programação Orientada a Objetos | [/documentos/entrega-1/programacao-orientada-objetos](https://github.com/sofiahernandes/lumiere/blob/main/documentos/entrega-1/programacao-orientada-objetos.md) |   
+| Análise Descritiva de Dados | [/documentos/entrega-1/analise-descitiva-de-dados](https://github.com/sofiahernandes/lumiere/blob/main/documentos/entrega-1/analise-descitiva-de-dados.md) |    
+<br/>
+
 # Descrição
 ## Proposta Principal
 O projeto **Lumière** é uma solução digital desenvolvida para auxiliar a fisioterapeuta **Maya Yoshiko Yamamoto**, especializada em **Reeducação Postural Global (RPG)**, na gestão e acompanhamento de seus pacientes.
