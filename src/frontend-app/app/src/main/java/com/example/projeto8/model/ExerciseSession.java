@@ -19,6 +19,34 @@ public class ExerciseSession {
     private Patient patient;
     private Exercise exercise;
 
+    public Long getExercisesession_id() {
+        return exercisesession_id;
+    }
+
+    public int getSerie() {
+        return serie;
+    }
+
+    public int getRepetitions() {
+        return repetitions;
+    }
+
+    public Boolean getFeelPain() {
+        return feelPain;
+    }
+
+    public WorkoutSession getWorkoutSession() {
+        return workoutSession;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Exercise getExercise() {
+        return exercise;
+    }
+
     // Construtor vazio (necessário para o Retrofit)
     public ExerciseSession() {}
 

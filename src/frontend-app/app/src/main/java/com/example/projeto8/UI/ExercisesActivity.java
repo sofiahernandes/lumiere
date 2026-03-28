@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.widget.ImageView;
 import android.net.Uri;
 import com.bumptech.glide.Glide;
-import com.example.projeto8.Exercise;
 import com.example.projeto8.R;
+import com.example.projeto8.UI.ExerciseURL;
 
 public class ExercisesActivity extends AppCompatActivity {
     ImageView iconHome;
@@ -35,7 +35,7 @@ public class ExercisesActivity extends AppCompatActivity {
                 .load(thumbnailUrl)
                 .into(imgExercise);
 
-        Exercise legpress = new Exercise(
+        ExerciseURL legpress = new ExerciseURL(
                 "Leg Press",
                 "https://www.youtube.com/watch?v=IZxyjW7MPJQ"
 
