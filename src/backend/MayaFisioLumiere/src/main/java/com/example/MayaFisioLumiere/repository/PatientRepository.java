@@ -20,7 +20,6 @@ public interface PatientRepository extends JpaRepository<PatientEntity, UUID> {
     @Transactional
     void deleteByNameAndSurname(String name, String surname);
 
-    Optional<PatientEntity> findByEmail(String email);
 
     Optional<PatientEntity> findByEmail(String email);
 }
