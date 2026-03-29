@@ -89,13 +89,15 @@ public class LoginActivity extends AppCompatActivity {
                         // Tenta ler o corpo do erro para saber o motivo real do 403
                         try {
                             String errorBody = response.errorBody().string();
-                            Log.e("API_DEBUG", "Corpo do erro: " + errorBody);
+                            Log.e("API_DEBUG", errorBody);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
                         if (response.code() == 403) {
-                            Toast.makeText(LoginActivity.this, "Acesso Negado (403). Verifique as permissões do servidor.", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(LoginActivity.this, "Acesso Negado (403). Verifique as permissões do servidor.", Toast.LENGTH_LONG).show();
+                            Log.e("API_DEBUG", "Código: " + response.code());
+                            Log.e("API_DEBUG", "Mensagem: " + response.message());
                         }
                 }
             }

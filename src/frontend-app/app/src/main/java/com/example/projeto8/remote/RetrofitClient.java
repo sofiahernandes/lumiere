@@ -27,7 +27,7 @@ public class RetrofitClient {
     }
 
     */
-        private static final String BASE_URL = "https://projeto8.onrender.com";
+        private static final String BASE_URL = "https://projeto8.onrender.com/";
         private static Retrofit retrofit = null;
         private static Context appContext;
 
@@ -43,14 +43,17 @@ public class RetrofitClient {
                 }
 
                 OkHttpClient client = new OkHttpClient.Builder().addInterceptor(chain -> {
-                    // Agora usamos o appContext que guardamos
                     String token = appContext.getSharedPreferences("STORAGE", Context.MODE_PRIVATE)
                             .getString("token", "");
 
-                    Request newRequest = chain.request().newBuilder()
-                            .addHeader("Authorization", "Bearer " + token)
-                            .build();
-                    return chain.proceed(newRequest);
+                    Request.Builder builder = chain.request().newBuilder();
+
+                    // SÓ ADICIONA O HEADER SE O TOKEN EXISTIR!
+                    if (token != null && !token.isEmpty()) {
+                        builder.addHeader("Authorization", "Bearer " + token);
+                    }
+
+                    return chain.proceed(builder.build());
                 }).build();
 
                 retrofit = new Retrofit.Builder()

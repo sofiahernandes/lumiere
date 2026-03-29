@@ -16,14 +16,14 @@ import retrofit2.http.Query;
 public interface PatientService {
     //para pegar as rotas do backend de patients (dados do patient)!
     //Buscar os dados do paciente pelo nome (para o profile)
-    @GET("/api/patient/getByName/{name}")
+    @GET("api/patient/getByName/{name}")
     Call<List<Patient>> getPatientByFullName(
             @Path("name") String name,
             @Query("surname") String surname
     );
 
     //Login do patient
-    @POST("/api/patient/login")
+    @POST("api/patient/login")
     Call<PatientLoginResponseDTO> login(@Body PatientLoginRequestDTO data);
 
 }
