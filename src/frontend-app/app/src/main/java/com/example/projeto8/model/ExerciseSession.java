@@ -35,6 +35,10 @@ public class ExerciseSession {
         return feelPain;
     }
 
+    public void setFeelPain(Boolean feelPain) {
+        this.feelPain = feelPain;
+    }
+
     public WorkoutSession getWorkoutSession() {
         return workoutSession;
     }
