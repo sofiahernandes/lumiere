@@ -38,25 +38,29 @@ public class SecurityFilter extends OncePerRequestFilter {
         }
 
         var token = this.recoverToken(request);
-        if (token != null) {
-            var email = tokenService.validateToken(token);
-            if (email != null) {
-                UserDetails user = null;
 
-                var admin = adminRepository.findByAdminEmail(email);
-                if (admin.isPresent()) {
-                    user = admin.get();
-                } else {
-                    var patient = patientRepository.findByEmail(email);
-                    if (patient.isPresent()) {
-                        user = patient.get();
-                    }
-                }
+        if (token == null) {
+            filterChain.doFilter(request, response);
+            return; // <--- SEM ISSO, O SPRING PODE DAR 403 NO LOGIN
+        }
 
-                if (user != null) {
-                    var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+        var email = tokenService.validateToken(token);
+        if (email != null) {
+            UserDetails user = null;
+
+            var admin = adminRepository.findByAdminEmail(email);
+            if (admin.isPresent()) {
+                user = admin.get();
+            } else {
+                var patient = patientRepository.findByEmail(email);
+                if (patient.isPresent()) {
+                    user = patient.get();
                 }
+            }
+
+            if (user != null) {
+                var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
         filterChain.doFilter(request, response);
