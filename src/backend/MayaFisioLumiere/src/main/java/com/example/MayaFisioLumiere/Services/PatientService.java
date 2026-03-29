@@ -3,6 +3,7 @@ package com.example.MayaFisioLumiere.Services;
 import com.example.MayaFisioLumiere.Domain.Patient.PatientRequestDTO;
 import com.example.MayaFisioLumiere.Domain.Patient.PatientResponseDTO;
 import com.example.MayaFisioLumiere.entity.PatientEntity;
+import com.example.MayaFisioLumiere.entity.role.UserRole;
 import com.example.MayaFisioLumiere.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -76,8 +77,10 @@ public class PatientService {
         newPatient.setHeight(data.height());
         newPatient.setWeight(data.weight());
         newPatient.setPatientAge(data.patientAge()); //remover? tirar?
-        newPatient.setRole(com.example.MayaFisioLumiere.entity.role.UserRole.Patient);
 
+        newPatient.setRole(UserRole.Patient);
+        newPatient.setTotalMinutesUsedToday(0);
+        newPatient.setLastAccessDate(java.time.LocalDate.now());
         newPatient.setPassword(data.birthDate());
 
         return patientRepository.save(newPatient);
