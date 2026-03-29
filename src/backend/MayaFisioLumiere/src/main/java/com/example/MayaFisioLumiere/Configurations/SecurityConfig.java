@@ -38,19 +38,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // 2. Libera LOGINS e Erros
-                        .requestMatchers(HttpMethod.POST, "api/patient/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "api/auth/login/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/patient/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
                         .requestMatchers("/error").permitAll()
 
                         // 3. Exercícios (Abertos conforme seu código anterior)
-                        .requestMatchers("api/exercise/**").permitAll()
+                        .requestMatchers("/api/exercise/**").permitAll()
 
                         // 4. Cadastro de Pacientes
                         // Mudei para hasAnyAuthority para evitar o erro do prefixo ROLE_
-                        .requestMatchers(HttpMethod.POST, "api/patient").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/patient").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
 
                         // 5. Qualquer outra rota de paciente ou do app exige login
-                        .requestMatchers("api/patient/**").authenticated()
+                        .requestMatchers("/api/patient/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

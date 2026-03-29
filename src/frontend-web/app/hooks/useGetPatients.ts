@@ -35,7 +35,7 @@ export function usePatients() {
 
   const fetchPatients = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}api/patient/getAllPatients`, {
+      const res = await fetch(`${API_URL}/api/patient/getAllPatients`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export function usePatients() {
 
     async function load() {
       try {
-        const res = await fetch(`${API_URL}api/patient/getAllPatients`, {
+        const res = await fetch(`${API_URL}/api/patient/getAllPatients`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -76,7 +76,7 @@ export function usePatients() {
 
   const addPatient = async (newPatient: PatientRequest): Promise<boolean> => {
     try {
-      const res = await fetch(`${API_URL}api/patient/createPatient`, {
+      const res = await fetch(`${API_URL}/api/patient/createPatient`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
