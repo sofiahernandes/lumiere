@@ -1,6 +1,7 @@
 package com.example.MayaFisioLumiere.Configurations;
 
 import com.example.MayaFisioLumiere.Configurations.Filter.SecurityFilter;
+import com.example.MayaFisioLumiere.Services.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,9 @@ import java.util.List;
 public class SecurityConfig {
 
     @Autowired
+    private AuthorizationService authorizationService;
+    
+    @Autowired
     private SecurityFilter securityFilter;
 
     @Bean
@@ -32,7 +36,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login/admin").permitAll() //hardcoding a rota para teste
                         .requestMatchers("/api/patient/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/patient/login").permitAll() //hardcoding o login para teste
                         .requestMatchers("/api/exercise/**").permitAll()
                         .requestMatchers("/api/workout/**").permitAll()
                         .requestMatchers("/api/exerciseSession/**").permitAll()
