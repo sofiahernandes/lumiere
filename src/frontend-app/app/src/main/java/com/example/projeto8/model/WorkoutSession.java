@@ -7,7 +7,6 @@ public class WorkoutSession {
     private Long workoutSession_id;
     private String weekDay;
     private Boolean checked;
-
     private LocalDate workoutDate;
 
     public Boolean getChecked() {

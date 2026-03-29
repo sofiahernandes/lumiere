@@ -1,6 +1,7 @@
 package com.example.MayaFisioLumiere.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,8 +42,8 @@ public class WorkoutSessionEntity {
     private PatientEntity patient;
 
     //Para permitir associar mais de um exercicio a workout do dia, isso cria uma tabela intermediaria
-    @JsonIgnore
-    @OneToMany(mappedBy = "workoutSession", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "workoutSession", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ExerciseSessionEntity> exerciseSessions;
 
 

@@ -1,6 +1,8 @@
 package com.example.MayaFisioLumiere.Services;
 
+import com.example.MayaFisioLumiere.Domain.ExerciseSession.ExerciseSessionResponseDTO;
 import com.example.MayaFisioLumiere.Domain.WorkoutSession.WorkoutSesRequestDTO;
+import com.example.MayaFisioLumiere.Domain.WorkoutSession.WorkoutSesResponseDTO;
 import com.example.MayaFisioLumiere.entity.PatientEntity;
 import com.example.MayaFisioLumiere.entity.WorkoutSessionEntity;
 import com.example.MayaFisioLumiere.repository.PatientRepository;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 
@@ -91,13 +95,43 @@ public class WorkoutSessionService {
     }
 
     //Buscar todas as workout sessions de um paciente (patient id)
-    public List<WorkoutSessionEntity> getWorkoutsByPatient(UUID patientId){
+   /* public List<WorkoutSessionEntity> getWorkoutsByPatient(UUID patientId){
 
         PatientEntity patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
         return workoutSessionRepository.findByPatient(patient);
     }
+*/
+
+    public List<WorkoutSesResponseDTO> getWorkoutsByPatient(UUID patientId) {
+        // 1. Primeiro buscamos o Paciente (para não dar erro de ID)
+        PatientEntity patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
+        // 2. Agora buscamos os treinos desse objeto 'patient'
+        List<WorkoutSessionEntity> workouts = workoutSessionRepository.findByPatient(patient);
+
+        // 3. Transformamos a lista de Entities em uma lista de DTOs (o pacote para o Android)
+        return workouts.stream().map(entity -> new WorkoutSesResponseDTO(
+                entity.getWorkoutSession_id(),
+                entity.getWeekDay(),
+                entity.getChecked(),
+                entity.getPatient().getPatient_ID(),
+                // Mapeando a lista de exercícios que está dentro do treino
+                entity.getExerciseSessions().stream().map(ex -> new ExerciseSessionResponseDTO(
+                        Math.toIntExact(ex.getExercisesession_id()),
+                        ex.getExercise().getExercise_ID(),
+                        ex.getWorkoutSession().getWorkoutSession_id(),
+                        ex.getPatient().getPatient_ID(),
+                        ex.getSerie(),
+                        ex.getRepetitions(),
+                        ex.getFeelPain()
+                )).toList()
+        )).toList();
+    }
+
+
 
     //Buscar todas as workout sessions de todos os pacientes
     public List<WorkoutSessionEntity> getAllWorkouts(){

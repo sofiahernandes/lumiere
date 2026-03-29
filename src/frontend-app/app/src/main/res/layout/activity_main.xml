@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Bem-Vindo,"
+        android:text="Bem-Vindo(a),"
         android:textColor="@color/white"
         android:textSize="35sp"
         android:textStyle="bold"
@@ -94,7 +94,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Feb 2021"
+                android:text="Fev 2026"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"/>
@@ -125,28 +125,28 @@
                 android:textAlignment="center"/>
 
             <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="MON"
+                android:layout_weight="1" android:text="SEG"
                 android:textColor="@color/gray" android:textAlignment="center"/>
 
             <TextView
                 android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="TUE"
+                android:layout_weight="1" android:text="TER"
                 android:textColor="@color/gray" android:textAlignment="center"/>
 
             <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="WED"
+                android:layout_weight="1" android:text="QUA"
                 android:textColor="@color/gray" android:textAlignment="center"/>
 
             <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="THUR"
+                android:layout_weight="1" android:text="QUI"
                 android:textColor="@color/gray" android:textAlignment="center"/>
 
             <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="FRI"
+                android:layout_weight="1" android:text="SEX"
                 android:textColor="@color/gray" android:textAlignment="center"/>
 
             <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="SAT"
+                android:layout_weight="1" android:text="SAB"
                 android:textColor="@color/gray" android:textAlignment="center"/>
         </LinearLayout>
 

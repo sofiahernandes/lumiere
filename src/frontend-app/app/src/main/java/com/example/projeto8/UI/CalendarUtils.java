@@ -7,27 +7,30 @@ import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class CalendarUtils
 {
     public static LocalDate selectedDate;
-
+    private static final Locale localeBR = new Locale("pt", "BR");
     public static String formattedDate(LocalDate date)
+
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", localeBR);
         return date.format(formatter);
     }
 
     public static String formattedTime(LocalTime time)
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss a", localeBR);
         return time.format(formatter);
     }
 
     public static String monthYearFromDate(LocalDate date)
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
-        return date.format(formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", localeBR);
+        String formatted = date.format(formatter);
+        return formatted.substring(0, 1).toUpperCase() + formatted.substring(1);
     }
 
     public static ArrayList<LocalDate> daysInMonthArray(LocalDate date)

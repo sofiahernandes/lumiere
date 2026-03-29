@@ -1,5 +1,6 @@
 package com.example.MayaFisioLumiere.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class ExerciseSessionEntity {
 
     @ManyToOne
     @JoinColumn(name="workoutsession_id", nullable= false)
+    @JsonBackReference
     private WorkoutSessionEntity workoutSession;
 
     @ManyToOne

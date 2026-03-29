@@ -18,6 +18,8 @@ import com.example.projeto8.api.patient.PatientDTO.PatientLoginResponseDTO;
 import com.example.projeto8.api.patient.PatientService;
 import com.example.projeto8.remote.RetrofitClient;
 
+import java.util.UUID;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,14 +78,14 @@ public class LoginActivity extends AppCompatActivity {
                             .putString("token", tokenGerado)
                             .apply();
 
-                    Log.d("JSON_REAL", new com.google.gson.Gson().toJson(response.body())); //Log para ver o que está retornando no login
-
-                    //Quando mariah colocar o json response name, id e email vai retornar os dados corretos
-                    Long patientID = response.body().getId();
+                    String patientID = response.body().getId();
                     String patientName = response.body().getName();
                     String patientEmail = response.body().getEmail();
 
+                    Log.d("JSON_REAL", new com.google.gson.Gson().toJson(response.body())); //Log para ver o que está retornando no login
                     Toast.makeText(LoginActivity.this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show();
+
+                    //Após o login, manda os dados para a MainActivity (App Home)
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("PATIENT_ID", patientID);
                     intent.putExtra("AUTH_TOKEN", tokenGerado);

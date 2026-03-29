@@ -2,18 +2,24 @@ package com.example.projeto8.api.patient.PatientDTO;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.UUID;
+
 public class PatientLoginResponseDTO {
 
-    private Long id;
+    @SerializedName("patient_id")
+    private String patient_id;
+
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("email")
     private String email;
-
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-
     @SerializedName("token")
     private String token;
 
+    public String getId() { return patient_id; }
+
+    public String getName() { return name; }
+    public String getEmail() { return email; }
     public String getToken() { return token; }
 }

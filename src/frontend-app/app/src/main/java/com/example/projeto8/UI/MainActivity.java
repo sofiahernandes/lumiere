@@ -49,30 +49,35 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main); // carrega o XML principal
 
-        // 1. PRIMEIRO: Inicialize todos os componentes do XML
+        // Inicializa todos os componentes do XML
         initWidgets();
 
-        // 2. Configure o RecyclerView de Tarefas com uma lista vazia inicial
+        // ConfigurA o RecyclerView de Tarefas com uma lista vazia inicial
         tasksParaExibir = new ArrayList<>();
         adapter = new TaskAdapter(tasksParaExibir);
         recyclerTasks.setAdapter(adapter);
 
 
-        // 3. Configurações de Menu e Calendário
+        // Configurações de Menu e Calendário
         setupMenuClicks();
         CalendarUtils.selectedDate = LocalDate.now();
         setWeekView();
 
-        // 4. POR ÚLTIMO: Busca os dados na API
-        //String meuIdReal = "3e8e4187-47d8-4751-955d-e6a036db9478";
+        // Busca os dados na API
 
         //Mecânismo de buscar os dados que vieram da intent de login
         String idRecebido = getIntent().getStringExtra("PATIENT_ID");
-        carregarDadosDoPaciente(UUID.fromString(idRecebido));
-        
+        String nomeRecebido = getIntent().getStringExtra("PATIENT_NAME");
 
+        //Assim que recebe o nome e id do paciente, muda o txtName na tela e faz a lógica de WorkoutSeshData
+        if (nomeRecebido != null) {
+            txtName.setText(nomeRecebido);
+        }
+        if (idRecebido != null) {
+            WorkoutSeshData(idRecebido);
+        }
     }
-     // código fica mais limpo, initWidgets() = preparar os atores
+
     private void initWidgets() {
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
@@ -81,11 +86,9 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         recyclerTasks = findViewById(R.id.recyclerTasks);
         recyclerTasks.setLayoutManager(new LinearLayoutManager(this));
 
-
         iconHome = findViewById(R.id.iconHome);
         iconExercise = findViewById(R.id.iconExercise);
         iconProfile = findViewById(R.id.iconProfile);
-
     }
     private void setupMenuClicks() {
         iconHome.setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         iconProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
     }
 
-    // monta o calendário semanal
+    // Monta o calendário semanal
     private void setWeekView() {
 
         // coloca "Mar 2026"
@@ -117,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
         setWeekView();
     }
-
     // BOTÃO AVANÇAR SEMANA
     public void nextWeekAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
@@ -132,46 +134,49 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             setWeekView();
         }
     }
-    private void carregarDadosDoPaciente(UUID patientId) {
-        // Usa o RetrofitClient que você criou para fazer o pedido
-        WorkoutService api = RetrofitClient.getWorkoutService();
 
+    //Mostrar a Workout do dia
+    private void WorkoutSeshData(String patientId) {
+        WorkoutService api = RetrofitClient.getWorkoutService();
         api.getWorkoutsByPatient(patientId).enqueue(new Callback<List<WorkoutSession>>() {
+
             @Override
             public void onResponse(Call<List<WorkoutSession>> call, Response<List<WorkoutSession>> response) {
-                // 1. Log de confirmação (que já vimos que funciona)
-                android.util.Log.d("TESTE_API", "O servidor respondeu agora!");
 
-                // 2. TUDO que mexe na tela precisa de permissão do Android para rodar na UI Thread
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
+                if (response.isSuccessful() && response.body() != null) {
+                    android.util.Log.d("TESTE_API", "O servidor respondeu agora!");
+                    List<WorkoutSession> exerciseList = response.body();
 
-                            //MUDAR AQUI OS DADOS MOCKADOS PARA OS REAIS VINDOS DO LOGIN
-                            // Mudar o texto do nome
-                            txtName.setText("Jorge");
-                            android.util.Log.d("TESTE_API", "Texto do nome alterado!");
+                    // TUDO que mexe na tela precisa de permissão do Android para rodar na UI Thread
+                    runOnUiThread(new Runnable() {
 
-                            // Criar os dados de teste
-                            ArrayList<Task> listaTeste = new ArrayList<>();
-                            listaTeste.add(new Task("Teste: Agachamento"));
-                            listaTeste.add(new Task("Teste: Flexão"));
+                        @Override
+                        public void run() {
+                            try {
 
-                            // Atualizar a lista e avisar o adapter
-                            tasksParaExibir.clear();
-                            tasksParaExibir.addAll(listaTeste);
-                            adapter.notifyDataSetChanged();
+                                tasksParaExibir.clear();
 
-                            android.util.Log.d("TESTE_API", "Lista de tarefas atualizada no Adapter!");
+                                for (WorkoutSession sessao : exerciseList) {
+                                    // Supondo que o nome do exercício esteja em getWorkoutName()
 
-                        } catch (Exception e) {
-                            android.util.Log.e("TESTE_API", "Erro ao atualizar interface: " + e.getMessage());
+                                    String exerciseSessions = sessao.getWeekDay();
+                                    tasksParaExibir.add(new Task(exerciseSessions));
+                                }
+
+                                if (tasksParaExibir.isEmpty()) {
+                                    tasksParaExibir.add(new Task("Nenhum treino para hoje"));
+                                }
+
+                                adapter.notifyDataSetChanged();
+                                Log.d("TESTE_API", "Dados reais carregados: " + tasksParaExibir.size());
+
+                            } catch (Exception e) {
+                                android.util.Log.e("TESTE_API", "Erro ao atualizar interface: " + e.getMessage());
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
-
 
             @Override
             public void onFailure(Call<List<WorkoutSession>> call, Throwable t) {

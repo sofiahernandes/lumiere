@@ -2,6 +2,7 @@ package com.example.MayaFisioLumiere.controller;
 
 
 import com.example.MayaFisioLumiere.Domain.WorkoutSession.WorkoutSesRequestDTO;
+import com.example.MayaFisioLumiere.Domain.WorkoutSession.WorkoutSesResponseDTO;
 import com.example.MayaFisioLumiere.entity.PatientEntity;
 import com.example.MayaFisioLumiere.entity.WorkoutSessionEntity;
 import com.example.MayaFisioLumiere.Services.WorkoutSessionService;
@@ -55,9 +56,8 @@ public class WorkoutSessionController {
     //Buscar todas as workout sessions de um paciente (patient id)
     //ROTA http://localhost:8081/workout/patient/3e8e4187-47d8-4751-955d-e6a036db9478
     @GetMapping("/patient/{patient_id}")
-    public ResponseEntity<List<WorkoutSessionEntity>> getWorkoutsByPatient(@PathVariable UUID patient_id){
-        return ResponseEntity.ok(workoutSessionService.getWorkoutsByPatient(patient_id));
-    }
+    public ResponseEntity<List<WorkoutSesResponseDTO>> getWorkoutsByPatient(@PathVariable UUID patient_id) {
+        return ResponseEntity.ok(workoutSessionService.getWorkoutsByPatient(patient_id));}
 
     //Buscar todas as workout sessions de todos os pacientes
     //ROTA http://localhost:8081/workout/all
