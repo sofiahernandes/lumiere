@@ -1,7 +1,6 @@
 package com.example.MayaFisioLumiere.Configurations;
 
 import com.example.MayaFisioLumiere.Configurations.Filter.SecurityFilter;
-import com.example.MayaFisioLumiere.Services.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,64 +14,42 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
-    private AuthorizationService authorizationService;
-    
-    @Autowired
     private SecurityFilter securityFilter;
-
-     /*@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf -> csrf.disable())
-                .cors(org.springframework.security.config.Customizer.withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login/admin").permitAll() //hardcoding a rota para teste
-                        .requestMatchers("/api/patient/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/patient/login").permitAll() //hardcoding o login para teste
-                        .requestMatchers("/api/exercise/**").permitAll()
-                        .requestMatchers("/api/workout/**").permitAll()
-                        .requestMatchers("/api/exerciseSession/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(securityFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
-                .build();
-    } */
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable()) // 1. Desabilita CSRF primeiro
-                .cors(org.springframework.security.config.Customizer.withDefaults()) // 2. Ativa o CORS
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Usa a config detalhada abaixo
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        // 1. Libera pre-flight (OPTIONS)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // 2. Libera os LOGINS (Sempre primeiro!)
+                        // 2. Libera LOGINS e Erros
                         .requestMatchers(HttpMethod.POST, "/api/patient/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
-
-                        // 3. Libera o erro interno do Spring (para você ver mensagens reais)
                         .requestMatchers("/error").permitAll()
 
-                        // 4. Regras para Exercícios (você deixou aberto)
+                        // 3. Exercícios (Abertos conforme seu código anterior)
                         .requestMatchers("/api/exercise/**").permitAll()
 
-                        // 5. BLOQUEIA o cadastro de pacientes para quem não é ADMIN
-                        // Aqui permitimos que apenas Admin acesse as outras rotas de /api/patient/
-                        .requestMatchers(HttpMethod.POST, "/api/patient").hasAnyRole("ADMIN", "ROLE_ADMIN")
+                        // 4. Cadastro de Pacientes
+                        // Mudei para hasAnyAuthority para evitar o erro do prefixo ROLE_
+                        .requestMatchers(HttpMethod.POST, "/api/patient").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
 
-                        // 6. Qualquer outra coisa de paciente ou o resto do app precisa de login
+                        // 5. Qualquer outra rota de paciente ou do app exige login
                         .requestMatchers("/api/patient/**").authenticated()
                         .anyRequest().authenticated()
                 )
@@ -80,6 +57,18 @@ public class SecurityConfig {
                 .build();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(List.of("*")); // Permite Android e Web
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

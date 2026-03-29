@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-// classe pra ajudar a filtrar as coisas dentro do banco de dados e ver por role, sendo admin ou paciente
+
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
@@ -23,15 +23,16 @@ public class SecurityFilter extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Autowired
-    private AdminRepository adminRepository; // Renomeado para clareza
+    private AdminRepository adminRepository;
 
     @Autowired
-    private PatientRepository patientRepository; // Adicionado para reconhecer pacientes
+    private PatientRepository patientRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // 1. Trata pre-flight do CORS (Evita 403 em requisições de navegadores/mobile)
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             return;
@@ -39,39 +40,44 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         var token = this.recoverToken(request);
 
+        // 2. Se não houver token, segue o fluxo (O SecurityConfig decidirá se a rota é permitAll)
         if (token == null) {
             filterChain.doFilter(request, response);
-            return; // <--- SEM ISSO, O SPRING PODE DAR 403 NO LOGIN
+            return;
         }
 
-        var email = tokenService.validateToken(token);
-        if (email != null) {
-            UserDetails user = null;
+        var login = tokenService.validateToken(token);
 
-            var admin = adminRepository.findByAdminEmail(email);
-            if (admin.isPresent()) {
-                user = admin.get();
+        if (login != null) {
+            // 3. Tenta encontrar como ADMIN
+            var adminOptional = adminRepository.findByAdminEmail(login);
+
+            if (adminOptional.isPresent()) {
+                setAuthentication(adminOptional.get());
             } else {
-                var patient = patientRepository.findByEmail(email);
-                if (patient.isPresent()) {
-                    user = patient.get();
+                // 4. Se não for admin, tenta encontrar como PACIENTE
+                var patientOptional = patientRepository.findByEmail(login);
+                if (patientOptional.isPresent()) {
+                    setAuthentication(patientOptional.get());
                 }
             }
-
-            if (user != null) {
-                var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
         }
+
         filterChain.doFilter(request, response);
+    }
+
+    private void setAuthentication(UserDetails user) {
+        var authentication = new UsernamePasswordAuthenticationToken(
+                user, null, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private String recoverToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) return null;
 
-        String token = authHeader.substring(7);
-        if (token.equals("undefined") || token.equals("null") || token.isBlank()) return null;
+        String token = authHeader.substring(7).trim();
+        if (token.isEmpty() || token.equals("undefined") || token.equals("null")) return null;
 
         return token;
     }
