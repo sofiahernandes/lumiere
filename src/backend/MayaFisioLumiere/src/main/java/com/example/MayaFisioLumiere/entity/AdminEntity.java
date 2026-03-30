@@ -59,7 +59,7 @@ public class AdminEntity implements UserDetails {
     // essa classe a baixo diz sobre o tipo de permissão que estamos dando para o nosso admin
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == UserRole.Admin) {
+        if(this.role == UserRole.ADMIN) {
             return List.of(
                     new SimpleGrantedAuthority("ROLE_ADMIN"),
                     new SimpleGrantedAuthority("ROLE_PATIENT"));

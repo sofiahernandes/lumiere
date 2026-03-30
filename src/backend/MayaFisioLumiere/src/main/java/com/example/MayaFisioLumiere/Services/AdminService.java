@@ -49,7 +49,7 @@ public class AdminService  {
         String encryptedPassword = bcrypt.encode(data.adminPassword());
         newAdmin.setAdminPassword(encryptedPassword);
 
-        newAdmin.setRole(UserRole.Admin);
+        newAdmin.setRole(UserRole.ADMIN);
 
         newAdmin.setTotalMinutesUsedToday(0);
         newAdmin.setLastAccessDate(java.time.LocalDate.now());
