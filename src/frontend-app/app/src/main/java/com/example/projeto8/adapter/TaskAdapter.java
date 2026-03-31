@@ -18,9 +18,15 @@ import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private ArrayList<Task> tasks;
+    private OnTaskClickListener listener;
 
-    public TaskAdapter(ArrayList<Task> tasks) {
+    public interface OnTaskClickListener {
+        void onTaskClick(Task task);
+    }
+
+    public TaskAdapter(ArrayList<Task> tasks, OnTaskClickListener listener) {
         this.tasks = tasks;
+        this.listener = listener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -53,11 +59,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Task task = tasks.get(position);
 
-        holder.txtTitle.setText(task.getName());
+        //holder.txtTitle.setText(task.getTitle());
+        // Junta o título com as séries e repetições para mostrar na tela
+        String textoExibicao = task.getTitle() + " | " + task.getSerie() + "x" + task.getReps();
+        holder.txtTitle.setText(textoExibicao);
         holder.expandArea.setVisibility(task.isExpanded ? View.VISIBLE : View.GONE);
 
         if (task.isDone) {
-            // CORRETO: Apenas o seu ícone e a cor verde
             holder.container.setBackgroundResource(R.drawable.task_bg_done);
             holder.btnCheck.setImageResource(R.drawable.ic_done);
             holder.cardTask.setBackgroundColor(
@@ -65,7 +73,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             );
 
         } else {
-            // CORRETO: Apenas o seu ícone vazio e a cor branca
             holder.container.setBackgroundResource(R.drawable.task_bg);
             holder.btnCheck.setImageResource(R.drawable.ic_empty);
             holder.cardTask.setBackgroundColor(
@@ -75,8 +82,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         // Clique para expandir
         holder.cardTask.setOnClickListener(v -> {
-            task.isExpanded = !task.isExpanded;
-            notifyItemChanged(position);
+            if (listener != null) {
+                listener.onTaskClick(task); // Manda a Task
+            }
         });
 
         // Clique para marcar/desmarcar
