@@ -26,7 +26,7 @@
 | Análise Descritiva de Dados | [/documentos/entrega-1/analise-descitiva-de-dados](https://github.com/2026-1-NCC3/Projeto8/blob/main/documentos/entrega-1/analise-descitiva-de-dados.md) |    
 | Programação Orientada a Objetos | [/documentos/entrega-1/programacao-orientada-objetos](https://github.com/2026-1-NCC3/Projeto8/blob/main/documentos/entrega-1/programacao-orientada-objetos.jpg) |   
 | Programação para Dispositivos Móveis | [/src/frontend-app](https://github.com/2026-1-NCC3/Projeto8/tree/main/src/frontend-app) |   
-| Projeto Interdisciplinar | [/src](https://github.com/2026-1-NCC3/Projeto8/tree/main/src) |   
+| Projeto Interdisciplinar | [/documentos/entrega-1/projeto-interdisciplinar](https://github.com/2026-1-NCC3/Projeto8/tree/main/documentos/entrega-1/projeto-interdisciplinar) |   
 <br/>
 
 # Descrição

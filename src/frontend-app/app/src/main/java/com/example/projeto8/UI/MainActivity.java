@@ -23,10 +23,13 @@ import java.util.UUID;
 
 import com.example.projeto8.R;
 import com.example.projeto8.adapter.TaskAdapter;
+import com.example.projeto8.model.Exercise;
+import com.example.projeto8.model.ExerciseSession;
 import com.example.projeto8.model.Task;
 import com.example.projeto8.model.WorkoutSession;
 import com.example.projeto8.api.workout.WorkoutService;
 import com.example.projeto8.remote.RetrofitClient;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,9 +57,20 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         // ConfigurA o RecyclerView de Tarefas com uma lista vazia inicial
         tasksParaExibir = new ArrayList<>();
-        adapter = new TaskAdapter(tasksParaExibir);
-        recyclerTasks.setAdapter(adapter);
+        adapter = new TaskAdapter(tasksParaExibir, new TaskAdapter.OnTaskClickListener() {
+            @Override
+            public void onTaskClick(Task task) {
+                Intent intent = new Intent(MainActivity.this, ExercisesActivity.class);
 
+                // Passamos os dados que já temos direto pra próxima tela!
+                intent.putExtra("EXERCISE_TITLE", task.getTitle());
+                intent.putExtra("EXERCISE_MEDIA_URL", task.getMidiaURL());
+                intent.putExtra("EXERCISE_DESC", task.getDescription());
+
+                startActivity(intent);
+            }
+        });
+        recyclerTasks.setAdapter(adapter);
 
         // Configurações de Menu e Calendário
         setupMenuClicks();
@@ -90,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         iconExercise = findViewById(R.id.iconExercise);
         iconProfile = findViewById(R.id.iconProfile);
     }
+
     private void setupMenuClicks() {
         iconHome.setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
         iconExercise.setOnClickListener(v -> startActivity(new Intent(this, ExercisesActivity.class)));
@@ -120,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
         setWeekView();
     }
+
     // BOTÃO AVANÇAR SEMANA
     public void nextWeekAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
@@ -135,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         }
     }
 
+
     //Mostrar a Workout do dia
     private void WorkoutSeshData(String patientId) {
         WorkoutService api = RetrofitClient.getWorkoutService();
@@ -145,33 +162,48 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
                 if (response.isSuccessful() && response.body() != null) {
                     android.util.Log.d("TESTE_API", "O servidor respondeu agora!");
-                    List<WorkoutSession> exerciseList = response.body();
+
+                    List<WorkoutSession> listaDeTreinos = response.body();
 
                     // TUDO que mexe na tela precisa de permissão do Android para rodar na UI Thread
                     runOnUiThread(new Runnable() {
-
                         @Override
                         public void run() {
                             try {
-
                                 tasksParaExibir.clear();
 
-                                for (WorkoutSession sessao : exerciseList) {
-                                    // Supondo que o nome do exercício esteja em getWorkoutName()
+                                for (WorkoutSession treino : listaDeTreinos) {
+                                    if (treino.getExercises() != null) {
+                                        for (ExerciseSession session : treino.getExercises()) {
 
-                                    String exerciseSessions = sessao.getWeekDay();
-                                    tasksParaExibir.add(new Task(exerciseSessions));
+                                            int serie = session.getSerie();
+                                            int reps = session.getRepetitions();
+
+                                            String titulo = "Exercício s/ nome";
+                                            Long exercise_id = -1L;
+                                            String midiaURL = "";
+                                            String description = "";
+
+                                            if (session.getExercise() != null) {
+                                                if (session.getExercise().getTitle() != null) titulo = session.getExercise().getTitle();
+                                                if (session.getExercise().getExercise_id() != null) exercise_id = session.getExercise().getExercise_id();
+                                                if (session.getExercise().getMidiaURL() != null) midiaURL = session.getExercise().getMidiaURL();
+                                                if (session.getExercise().getDescription() != null) description = session.getExercise().getDescription();
+                                            }
+
+                                            tasksParaExibir.add(new Task(exercise_id, titulo, serie, reps, midiaURL, description));
+                                        }
+                                    }
                                 }
 
                                 if (tasksParaExibir.isEmpty()) {
-                                    tasksParaExibir.add(new Task("Nenhum treino para hoje"));
-                                }
+                                    tasksParaExibir.add(new Task(-1L, "Nenhum exercício para hoje", 0, 0, "", ""));                                }
 
                                 adapter.notifyDataSetChanged();
-                                Log.d("TESTE_API", "Dados reais carregados: " + tasksParaExibir.size());
+                                Log.d("TESTE_API", "Exercícios carregados: " + tasksParaExibir.size());
 
                             } catch (Exception e) {
-                                android.util.Log.e("TESTE_API", "Erro ao atualizar interface: " + e.getMessage());
+                                Log.e("TESTE_API", "Erro ao atualizar interface: " + e.getMessage());
                             }
                         }
                     });
@@ -181,9 +213,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             @Override
             public void onFailure(Call<List<WorkoutSession>> call, Throwable t) {
                 Log.e("API_ERRO", "Mensagem: " + t.getMessage());
-                txtName.setText("ERRO DE CONEXÃO: " + t.getMessage());
+                runOnUiThread(() -> txtName.setText("ERRO DE CONEXÃO"));
             }
         });
     }
-
-    }
+}
