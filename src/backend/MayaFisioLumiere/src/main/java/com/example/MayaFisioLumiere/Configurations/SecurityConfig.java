@@ -53,13 +53,14 @@ public class SecurityConfig {
                 "http://localhost:3000",
                 "http://localhost:8080",
                 "http://localhost:8081",
-                "https://lumiere-project8.vercel.app",
-                "https://lumiere-project8.vercel.app/"
+                "https://lumiere-project8.vercel.app"
         ));
 
         config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type", "Accept"));
         config.setAllowCredentials(true);
+
+        config.addExposedHeader("Access-Control-Allow-Private-Network");
 
         var source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
