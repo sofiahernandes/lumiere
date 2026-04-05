@@ -80,7 +80,7 @@ public class PatientService {
         newPatient.setHeight(data.height());
         newPatient.setWeight(data.weight());
         newPatient.setPatientAge(data.patientAge()); //remover? tirar?
-        newPatient.setRole(UserRole.Patient);
+        newPatient.setRole(UserRole.PATIENT);
         newPatient.setTotalMinutesUsedToday(0);
         newPatient.setLastAccessDate(java.time.LocalDate.now());
         newPatient.setPassword(data.birthDate());

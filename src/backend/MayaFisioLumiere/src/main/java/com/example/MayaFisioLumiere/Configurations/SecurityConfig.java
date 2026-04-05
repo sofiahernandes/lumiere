@@ -51,8 +51,6 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(java.util.List.of(
                 "http://localhost:3000",
-                "http://localhost:8080",
-                "http://localhost:8081",
                 "https://lumiere-project8.vercel.app"
         ));
 
