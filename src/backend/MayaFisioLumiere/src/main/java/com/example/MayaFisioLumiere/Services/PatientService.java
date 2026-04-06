@@ -41,7 +41,8 @@ public class PatientService {
                         patient.getHeight(),
                         patient.getWeight(),
                         patient.isLgpdCheck(),
-                        patient.getDescription()
+                        patient.getDescription(),
+                        patient.getCpf()
                 ))
                 .toList();
     }
@@ -64,7 +65,8 @@ public class PatientService {
                 patient.getHeight(),
                 patient.getWeight(),
                 patient.isLgpdCheck(),
-                patient.getDescription()
+                patient.getDescription(),
+                patient.getCpf()
         )).toList();
     }
     //cria novo paciente dentro do banco de dados
@@ -143,7 +145,8 @@ public class PatientService {
                 patient.getHeight(),
                 patient.getWeight(),
                 patient.isLgpdCheck(),
-                patient.getDescription()
+                patient.getDescription(),
+                patient.getCpf()
         );
     }
 
