@@ -1,6 +1,6 @@
-package com.example.MayaFisioLumiere.entity;
+package com.example.MayaFisioLumiere.Entity;
 
-import com.example.MayaFisioLumiere.entity.role.UserRole;
+import com.example.MayaFisioLumiere.Entity.role.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,6 +67,10 @@ public class PatientEntity implements UserDetails {
 
     @Column
     private Double weight;
+
+    @Column
+    private String description;
+
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

@@ -11,6 +11,6 @@ public record PatientRequestDTO(
         String cellPhone,
         String gender,
         Double height,
-        Double weight
-
+        Double weight,
+        String description
 ) { }
