@@ -67,4 +67,7 @@ Percentil: =PERCENTIL.INC(INICIO:FIM; PERCENTIL(º))
 <br/>
 
 ## Gráficos
-[Clique aqui para ver os gráficos](https://drive.google.com/drive/folders/1YaKUmhMEIUiZM7HZeyodo4zL32b6yvCb)
+![Graficos_2](https://github.com/user-attachments/assets/a3f2cd80-1765-44a3-9d8b-1d01535a385b)
+![Graficos_1](https://github.com/user-attachments/assets/f0219474-f1ed-42fc-b9ca-5975b0433e71)
+![Graficos_1](https://github.com/user-attachments/assets/2cf08d64-a876-4c85-ad0e-4a17cd4d75b7)
+
