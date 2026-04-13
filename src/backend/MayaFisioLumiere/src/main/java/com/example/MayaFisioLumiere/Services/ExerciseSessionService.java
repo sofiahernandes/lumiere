@@ -79,6 +79,13 @@ public class ExerciseSessionService {
         ExerciseSessionEntity session = exerciseSessionRepository.findById(exercisesession_id)
                 .orElseThrow(() -> new RuntimeException("Sessão de exercício não encontrada"));
 
+        if (data.serie() != null) {
+            session.setSerie(data.serie());
+        }
+        if (data.repetitions() != null) {
+            session.setRepetitions(data.repetitions());
+        }
+
         if (data.patient_id() != null) {
             PatientEntity patient = patientRepository.findById(data.patient_id())
                     .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
