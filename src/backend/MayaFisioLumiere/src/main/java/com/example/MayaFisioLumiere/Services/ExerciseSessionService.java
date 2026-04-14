@@ -125,12 +125,12 @@ public class ExerciseSessionService {
     }
 
 
-    public void deleteExerciseSession(Long exercisession_id) {
+    public void deleteExerciseSession(Long exercisesession_id) {
          try {
-            if(!exerciseSessionRepository.existsById(exercisession_id)){
+            if(!exerciseSessionRepository.existsById(exercisesession_id)){
                 throw new RuntimeException("Sessão de Exercicios não encontrada");
             }
-             exerciseSessionRepository.deleteById(exercisession_id);
+             exerciseSessionRepository.deleteById(exercisesession_id);
          }catch (Exception err) {
             throw new RuntimeException("Erro ao deletar Sessão de Exercícios", err);
             }
