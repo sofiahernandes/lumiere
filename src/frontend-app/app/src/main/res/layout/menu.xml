@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/menu"
+    android:id="@+id/menu_container"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:orientation="horizontal"
@@ -8,6 +9,7 @@
     android:padding="5dp">
 
     <LinearLayout
+        android:id="@+id/btnCalendar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -15,19 +17,23 @@
         android:gravity="center"
         android:clickable="true"
         android:focusable="true">
+
         <ImageView
             android:id="@+id/iconCalendar"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@drawable/ic_calendar_selector"
             android:duplicateParentState="true" />
+
         <TextView
+            android:id="@+id/txtCalendar"
             android:layout_marginTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Agenda"
             android:textSize="12sp"
-            android:textColor="#666666" />
+            android:textColor="@color/gray"
+            android:duplicateParentState="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -39,19 +45,22 @@
         android:gravity="center"
         android:clickable="true"
         android:focusable="true">
+
         <ImageView
             android:id="@+id/iconHome"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@drawable/ic_home_selector"
             android:duplicateParentState="true" />
+
         <TextView
             android:layout_marginTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Início"
             android:textSize="12sp"
-            android:textColor="#666666" />
+            android:textColor="@color/gray"
+            android:duplicateParentState="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,19 +72,23 @@
         android:gravity="center"
         android:clickable="true"
         android:focusable="true">
+
         <ImageView
             android:id="@+id/iconProfile"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@drawable/ic_profile_selector"
             android:duplicateParentState="true" />
+
         <TextView
+            android:id="@+id/txtProfile"
             android:layout_marginTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Perfil"
             android:textSize="12sp"
-            android:textColor="#666666" />
+            android:textColor="@color/gray"
+            android:duplicateParentState="true" />
     </LinearLayout>
 
 </LinearLayout>

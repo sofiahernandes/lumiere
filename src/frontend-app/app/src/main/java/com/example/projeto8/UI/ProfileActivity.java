@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.profile_activity);
+        setContentView(R.layout.activity_profile);
 
         // ====== INICIALIZA VIEWS ======
         txtName = findViewById(R.id.txtName);
@@ -100,20 +101,27 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         public void setupMenuClicks() {
-            iconHome.setOnClickListener(v -> {
-                startActivity(new Intent(this, MainActivity.class)); // Volta para a Home
+            // Pegamos os layouts dos botões
+            View btnCalendar = findViewById(R.id.btnCalendar);
+            View btnHome = findViewById(R.id.btnHome);
+            View btnProfile = findViewById(R.id.btnProfile);
+
+            // Configura o clique da Agenda
+            btnCalendar.setOnClickListener(v -> {
+                startActivity(new Intent(this, MonthCalendarActivity.class));
                 overridePendingTransition(0, 0);
                 finish();
             });
 
-            iconCalendar.setOnClickListener(v -> {
-                startActivity(new Intent(this, ExercisesActivity.class));
+            // Clique na Home (já está nela, não precisa fazer nada ou apenas scroll up)
+            btnHome.setOnClickListener(v -> {
+                startActivity(new Intent(this, MainActivity.class));
                 overridePendingTransition(0, 0);
                 finish();
             });
 
-            iconProfile.setOnClickListener(v -> {
-                // Já está no perfil, não faz nada
+            // Clique no Perfil
+            btnProfile.setOnClickListener(v -> {
             });
         }
     }

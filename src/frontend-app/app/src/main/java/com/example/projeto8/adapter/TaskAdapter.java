@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +34,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         CardView cardTask;
         LinearLayout expandArea, container;
         TextView txtTitle;
+        ImageView imgArrow;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -42,6 +44,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             expandArea = itemView.findViewById(R.id.expandArea);
             txtTitle = itemView.findViewById(R.id.txtTodayE);
             container = itemView.findViewById(R.id.container);
+            imgArrow = itemView.findViewById(R.id.imgArrow);
         }
     }
 
@@ -57,20 +60,41 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Task task = tasks.get(position);
 
-        //holder.txtTitle.setText(task.getTitle());
-        // Junta o título com as séries e repetições para mostrar na tela
+// 1. Texto do título
         String textoExibicao = task.getTitle() + " | " + task.getSerie() + "x" + task.getReps();
         holder.txtTitle.setText(textoExibicao);
-        holder.expandArea.setVisibility(task.isExpanded ? View.VISIBLE : View.GONE);
-        holder.container.setBackgroundResource(R.drawable.task_bg);
-        holder.cardTask.setBackgroundColor(
-                holder.itemView.getContext().getColor(android.R.color.black)
-        );
 
-        // Clique para expandir
-        holder.cardTask.setOnClickListener(v -> {
+        // 2. Controle de visibilidade da expansão
+        holder.expandArea.setVisibility(task.isExpanded ? View.VISIBLE : View.GONE);
+
+        // 3. Clique para expandir (Diferente do clique de ir para outra tela)
+        holder.container.setOnClickListener(v -> {
+            // Inverte o estado de expansão
+            task.isExpanded = !task.isExpanded;
+
+            // Notifica o sistema para redesenhar esse item específico
+            notifyItemChanged(position);
+        });
+
+        // Lógica da Seta: se expandido, gira 180 graus (fica para cima)
+        if (task.isExpanded) {
+            holder.imgArrow.setRotation(180f);
+        } else {
+            holder.imgArrow.setRotation(0f);
+        }
+        holder.container.setOnClickListener(v -> {
+            task.isExpanded = !task.isExpanded;
+
+            // O notifyItemChanged fará o onBindViewHolder rodar de novo
+            // e aplicar a rotação correta
+            notifyItemChanged(position);
+        });
+
+        // 4. Clique no texto do vídeo (Se quiser abrir a ExercisesActivity por aqui)
+        View txtVideo = holder.itemView.findViewById(R.id.txtVideoLink);
+        txtVideo.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onTaskClick(task); // Manda a Task
+                listener.onTaskClick(task);
             }
         });
 

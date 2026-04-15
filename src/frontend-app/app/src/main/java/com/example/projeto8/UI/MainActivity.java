@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,13 +45,15 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     private TaskAdapter adapter;
     private ArrayList<Task> tasksParaExibir;
     private ImageView iconHome, iconCalendar, iconProfile; // menu
+    private View bntHome,bntCalendar,bntProfile;
+    private Button btnStartWorkout;
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences prefs = getSharedPreferences("STORAGE", MODE_PRIVATE);
-
+        // SharedPreferences prefs = getSharedPreferences("STORAGE", MODE_PRIVATE);
+        /*
         String idRecebido = prefs.getString("patient_id", null);
         String nomeRecebido = prefs.getString("patient_name", null);
 
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         if (idRecebido != null) {
             WorkoutSeshData(idRecebido);
         }
+        */
+        carregarDadosMockados();
     }
 
     @Override
@@ -114,28 +119,47 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         iconCalendar = findViewById(R.id.iconCalendar);
         iconHome = findViewById(R.id.iconHome);
         iconProfile = findViewById(R.id.iconProfile);
+        View btnHome = findViewById(R.id.btnHome);
 
-        iconHome.setSelected(true);
+        // Marca a Home como selecionada logo ao abrir o app
+        if (btnHome != null) {
+            btnHome.setSelected(true);
+        }
+
+        btnStartWorkout = findViewById(R.id.btnStartWorkout);
     }
 
     private void setupMenuClicks() {
 
-        iconCalendar.setOnClickListener(v -> {
-            startActivity(new Intent(this, ExercisesActivity.class));
-            overridePendingTransition(0, 0); // Troca de tela sem "pular"
+        // Pegamos os layouts dos botões
+        View btnCalendar = findViewById(R.id.btnCalendar);
+        View btnHome = findViewById(R.id.btnHome);
+        View btnProfile = findViewById(R.id.btnProfile);
+
+        // Configura o clique da Agenda
+        btnCalendar.setOnClickListener(v -> {
+            startActivity(new Intent(this, MonthCalendarActivity.class));
+            overridePendingTransition(0, 0);
             finish();
         });
 
-        // Clique na Home (já está nela)
-        iconHome.setOnClickListener(v -> {
-            // Opcional: rolar recycler para o topo
+        // Clique na Home (já está nela, não precisa fazer nada ou apenas scroll up)
+        btnHome.setOnClickListener(v -> {
+            recyclerTasks.smoothScrollToPosition(0);
         });
 
         // Clique no Perfil
-        iconProfile.setOnClickListener(v -> {
+        btnProfile.setOnClickListener(v -> {
             startActivity(new Intent(this, ProfileActivity.class));
             overridePendingTransition(0, 0);
             finish();
+        });
+
+        // Botão de Iniciar Treino (Lógica separada do menu)
+        btnStartWorkout.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ExercisesActivity.class);
+            intent.putParcelableArrayListExtra("LISTA_EXERCICIOS", tasksParaExibir);
+            startActivity(intent);
         });
     }
 
@@ -199,7 +223,22 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             default: return "";
         }
     }
+    private void carregarDadosMockados() {
+        tasksParaExibir.clear();
 
+        // Adicionando exercícios de teste
+        tasksParaExibir.add(new Task(1L, "Agachamento Livre", 3, 15, "https://www.youtube.com/watch?v=aclHkVaku9U", "Mantenha as costas retas e desça até 90 graus."));
+        tasksParaExibir.add(new Task(2L, "Flexão de Braços", 4, 10, "https://www.youtube.com/watch?v=vp7pYV4X_O4", "Mantenha o corpo alinhado, sem descer o quadril."));
+        tasksParaExibir.add(new Task(3L, "Prancha Abdominal", 3, 30, "https://www.youtube.com/watch?v=pvIjsGZ0Zbc", "Segure por 30 segundos mantendo o core contraído."));
+
+        // Atualiza a interface
+        adapter.notifyDataSetChanged();
+
+        // Faz o botão aparecer, já que agora temos dados
+        if (btnStartWorkout != null) {
+            btnStartWorkout.setVisibility(View.VISIBLE);
+        }
+    }
     //Mostrar a Workout do dia
     private void WorkoutSeshData(String patientId) {
         WorkoutService api = RetrofitClient.getWorkoutService();

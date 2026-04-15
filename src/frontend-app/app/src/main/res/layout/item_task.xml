@@ -33,6 +33,30 @@
                 android:textStyle="bold"
                 android:textSize="18sp"/>
 
+            <ImageView
+                android:id="@+id/imgArrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/angle_down" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutExpand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtVideoLink"
+                android:text="Assistir Vídeo"
+                android:textColor="#2196F3" />
+
         </LinearLayout>
 
         <LinearLayout

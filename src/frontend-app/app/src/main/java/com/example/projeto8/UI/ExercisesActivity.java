@@ -1,6 +1,7 @@
 package com.example.projeto8.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.content.Intent;
@@ -12,22 +13,28 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.projeto8.R;
+import com.example.projeto8.model.Task;
 
 public class ExercisesActivity extends AppCompatActivity {
     private ImageView iconHome, iconCalendar, iconProfile, imgExercise;
     private TextView textTitle, textDescription;
     private String currentVideoUrl = ""; // Guarda a URL para quando o paciente clicar na imagem
+    private ArrayList<Task> listaExercicios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.exercises_activity);
+        setContentView(R.layout.activity_exercises);
 
         imgExercise = findViewById(R.id.imgExercise);
         textTitle = findViewById(R.id.textExercise); // Aquele seu TextView de 33dp
 
         textDescription = findViewById(R.id.txtDescription);
-
+        listaExercicios = getIntent().getParcelableArrayListExtra("LISTA_EXERCICIOS");
+        if (listaExercicios != null && !listaExercicios.isEmpty()) {
+            // Lógica para exibir o primeiro exercício, cronômetro, etc.
+            Log.d("SESSION", "Iniciando treino com " + listaExercicios.size() + " exercícios.");
+        }
         iconHome = findViewById(R.id.iconHome);
         iconCalendar = findViewById(R.id.iconCalendar);
         iconProfile = findViewById(R.id.iconProfile);
