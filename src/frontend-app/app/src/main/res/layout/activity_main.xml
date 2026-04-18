@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:background="@drawable/top_bg"
-
         app:layout_constraintBottom_toTopOf="@id/contentLayout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,21 +55,16 @@
         app:layout_constraintStart_toStartOf="@id/txtWelcome"
         />
 
-
-
-
     <LinearLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="20dp"
         android:orientation="vertical"
-
         app:layout_constraintTop_toBottomOf="@id/topBackground"
         app:layout_constraintBottom_toTopOf="@id/menu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
 
         <!-- HEADER (semana) -->
         <LinearLayout
@@ -79,16 +73,16 @@
             android:orientation="horizontal"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp">
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@null"
+            <ImageButton
+                android:id="@+id/my_image_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/chevron"
+                android:scaleType="fitStart"
+                android:rotation="180"
                 android:onClick="previousWeekAction"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
-
+                android:contentDescription="Anterior"
+                android:background="?attr/selectableItemBackground" />
             <TextView
                 android:id="@+id/monthYearTV"
                 android:layout_width="0dp"
@@ -99,14 +93,14 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"/>
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@null"
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/chevron"
+                android:scaleType="fitEnd"
                 android:onClick="nextWeekAction"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:contentDescription="Próximo"
+                android:background="?attr/selectableItemBackground" />
         </LinearLayout>
 
         <!-- DIAS DA SEMANA -->
@@ -114,8 +108,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <!-- Repete para os dias -->
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -183,18 +175,15 @@
             android:textColor="@android:color/white"
             android:layout_margin="16dp"
             android:visibility="gone" />
-
     </LinearLayout>
 
-    <!-- MENU FIXO EMBAIXO -->
+    <!-- MENU -->
     <include
         android:id="@+id/menu"
         layout="@layout/menu"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

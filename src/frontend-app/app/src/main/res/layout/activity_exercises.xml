@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,7 +12,6 @@
         android:id="@+id/topBackground"
         android:layout_width="490dp"
         android:layout_height="900dp"
-        android:background="@drawable/background5"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@id/contentLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,8 +26,7 @@
         android:text="Nome do Exercício"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="28sp"
-        android:textStyle="bold"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -46,7 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textExercise"
-        tools:srcCompat="@drawable/ic_exercise" />
+        tools:srcCompat="@drawable/background2" />
 
     <TextView
         android:id="@+id/txtDescription"
@@ -72,7 +67,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnPain"
         />
-
 
     <Button
         android:id="@+id/btnPain"
