@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -37,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/exercise/**").permitAll()
                         .requestMatchers("/api/workout/**").permitAll()
                         .requestMatchers("/api/exerciseSession/**").permitAll()
+                        .requestMatchers("/api/appointment/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -51,8 +53,6 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(java.util.List.of(
                 "http://localhost:3000",
-                "http://localhost:8080",
-                "http://localhost:8081",
                 "https://lumiere-project8.vercel.app"
         ));
 
@@ -67,6 +67,7 @@ public class SecurityConfig {
 
         return source;
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
