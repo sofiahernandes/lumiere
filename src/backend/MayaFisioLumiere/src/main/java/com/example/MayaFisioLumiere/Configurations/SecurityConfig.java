@@ -53,7 +53,7 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(java.util.List.of(
                 "http://localhost:3000",
-                "https://lumiere-project8.vercel.app"
+                "https://admin-lumiere.vercel.app/login"
         ));
 
         config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
