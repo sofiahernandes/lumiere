@@ -11,6 +11,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.projeto8.R;
+import com.example.projeto8.api.patient.PatientDTO.PatientResponseDTO;
 import com.example.projeto8.api.patient.PatientService;
 import com.example.projeto8.model.Patient;
 import com.example.projeto8.remote.RetrofitClient;
@@ -25,8 +26,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ImageView iconHome, iconExercise, iconProfile;
 
-    private TextView txtName, txtStatus, txtEmail, txtCpf, txtBirthDate,
-            txtGender, txtHeight, txtWeight;
+    private TextView txtName, txtStatus, txtEmail, txtCpf, txtCellphone, txtBirthDate,txtAge, txtGender, txtHeight, txtWeight, txtDescription, txtLGDP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,70 +34,80 @@ public class ProfileActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.profile_activity);
 
-        // ====== INICIALIZA VIEWS ======
         txtName = findViewById(R.id.txtName);
         txtStatus = findViewById(R.id.txtStatus);
         txtEmail = findViewById(R.id.txtEmail);
         txtCpf = findViewById(R.id.txtCpf);
+        txtCellphone = findViewById(R.id.txtCellphone);
         txtBirthDate = findViewById(R.id.txtBirthDate);
+        txtAge = findViewById(R.id.txtAge);
         txtGender = findViewById(R.id.txtGender);
         txtHeight = findViewById(R.id.txtHeight);
         txtWeight = findViewById(R.id.txtWeight);
+        txtDescription = findViewById(R.id.txtDescription);
+        txtLGDP = findViewById(R.id.txtLGDP);
 
-        // ====== MENU ======
+        //  MENU
         iconHome = findViewById(R.id.iconHome);
         iconExercise = findViewById(R.id.iconExercise);
         iconProfile = findViewById(R.id.iconProfile);
         setupMenuClicks();
 
-        // ====== PEGAR NOME DO LOGIN ======
+        //  PEGAR NOME DO LOGIN
         SharedPreferences prefs = getSharedPreferences("STORAGE", MODE_PRIVATE);
-        String name = prefs.getString("patient_name", null);
+        String patient_id = prefs.getString("patient_id", null);
 
-        if (name != null) {
-            loadPatient(name);
+        if (patient_id != null) {
+            loadPatient(patient_id);
         } else {
-            Log.e("PROFILE", "Nome não encontrado no SharedPreferences");
+            Log.e("PROFILE", "Paciente não encontrado no SharedPreferences");
         }
     }
 
-    // ====== BUSCAR PACIENTE PELO NOME ======
-    private void loadPatient(String name) {
+    private void loadPatient(String UUID) {
         PatientService service = RetrofitClient.getPatientService();
 
-        service.getPatientByFullName(name, null) // surname = null
-                .enqueue(new Callback<List<Patient>>() {
+        service.getPatientById(UUID)
+                .enqueue(new Callback<PatientResponseDTO>() {
 
                     @Override
-                    public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
-                        if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    public void onResponse(Call<PatientResponseDTO> call, Response<PatientResponseDTO> response) {
+                        if (response.isSuccessful() && response.body() != null) {
 
-                            Patient p = response.body().get(0); // pega o primeiro
+                            PatientResponseDTO patient = response.body();
 
-                            txtName.setText(p.getName() + " " + p.getSurname());
-                            txtStatus.setText("Status: " + p.getStatus());
+                            txtName.setText(patient.getName() + " " + patient.getSurname());
+                            txtStatus.setText("Status: " + patient.getStatus());
 
-                            txtEmail.setText(p.getEmail());
-                            txtCpf.setText(p.getCpf());
-                            txtBirthDate.setText(p.getBirthDate());
+                            txtEmail.setText(patient.getEmail());
+                            txtCpf.setText(patient.getCpf());
+                            txtBirthDate.setText(patient.getBirthDate());
 
-                            txtGender.setText(p.getGender());
-                            txtHeight.setText(p.getHeight());
-                            txtWeight.setText(p.getWeight());
+                            txtGender.setText(patient.getGender());
+                            txtHeight.setText(patient.getHeight());
+                            txtWeight.setText(patient.getWeight());
+                            txtAge.setText(String.valueOf(patient.getPatientAge()));
+                            txtCellphone.setText(patient.getCellPhone());
 
+                            String lgpdStatus = patient.isLgpdCheck() ? "Aceito" : "Não Aceito";
+                            txtLGDP.setText("Termos LGPD: " + lgpdStatus);
+
+                            if(patient.getDescription() != null) {
+                                txtDescription.setText(patient.getDescription());
+                            }
                         } else {
                             Log.e("API_ERROR", "Resposta vazia");
-                        }
                     }
+                }
 
                     @Override
-                    public void onFailure(Call<List<Patient>> call, Throwable t) {
-                        Log.e("API_ERROR", "Erro: " + t.getMessage());
+                    public void onFailure(Call<PatientResponseDTO> call, Throwable t) {
+                        Log.e("API_ERROR", "Falha na requisição: " + t.getMessage());
                     }
                 });
-    }
+ }
 
-    // ====== MENU ======
+    // MENU
     private void setupMenuClicks() {
         iconHome.setOnClickListener(v -> {
             startActivity(new Intent(this, MainActivity.class));
