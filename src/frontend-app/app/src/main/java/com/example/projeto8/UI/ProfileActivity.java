@@ -26,7 +26,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ImageView iconHome, iconExercise, iconProfile;
 
-    private TextView txtName, txtStatus, txtEmail, txtCpf, txtCellphone, txtBirthDate,txtAge, txtGender, txtHeight, txtWeight, txtDescription, txtLGDP;
+    private TextView txtName, txtStatus, txtEmail,txtPassword, txtCpf, txtCellphone, txtBirthDate,txtAge, txtGender, txtHeight, txtWeight, txtDescription, txtLGDP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
         txtName = findViewById(R.id.txtName);
         txtStatus = findViewById(R.id.txtStatus);
         txtEmail = findViewById(R.id.txtEmail);
+        txtPassword = findViewById(R.id.txtPassword);
         txtCpf = findViewById(R.id.txtCpf);
         txtCellphone = findViewById(R.id.txtCellphone);
         txtBirthDate = findViewById(R.id.txtBirthDate);
@@ -80,12 +81,13 @@ public class ProfileActivity extends AppCompatActivity {
                             txtStatus.setText("Status: " + patient.getStatus());
 
                             txtEmail.setText(patient.getEmail());
+                            txtPassword.setText(patient.getPassword());
                             txtCpf.setText(patient.getCpf());
                             txtBirthDate.setText(patient.getBirthDate());
 
                             txtGender.setText(patient.getGender());
-                            txtHeight.setText(patient.getHeight());
-                            txtWeight.setText(patient.getWeight());
+                            txtHeight.setText(patient.getHeight() + " m");
+                            txtWeight.setText(patient.getWeight() + " kg");
                             txtAge.setText(String.valueOf(patient.getPatientAge()));
                             txtCellphone.setText(patient.getCellPhone());
 
