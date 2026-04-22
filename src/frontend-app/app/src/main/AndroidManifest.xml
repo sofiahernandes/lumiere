@@ -19,11 +19,10 @@
         <activity android:name=".UI.LoginActivity"/>
         <activity android:name=".UI.LoadScreen"/>
         <activity android:name=".UI.MayaChatActivity"/>
-        <activity android:name=".UI.MonthCalendarActivity"
-            />
+        <activity android:name=".UI.MainActivity" />
         <activity android:name=".UI.ProfileActivity" />
 
-        <activity android:name=".UI.MainActivity"
+        <activity android:name=".UI.MonthCalendarActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

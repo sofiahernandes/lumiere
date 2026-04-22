@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     private RecyclerView recyclerTasks;
     private TaskAdapter adapter;
     private ArrayList<Task> tasksParaExibir;
-    private ImageView iconHome, iconCalendar, iconProfile; // menu
-    private View bntHome,bntCalendar,bntProfile;
+    ImageView iconHome, iconCalendar, iconProfile; // menu
+    View bntHome,bntCalendar,bntProfile;
     private Button btnStartWorkout;
 
     @Override
@@ -116,16 +116,16 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         recyclerTasks = findViewById(R.id.recyclerTasks);
         recyclerTasks.setLayoutManager(new LinearLayoutManager(this));
 
+        View menuView = findViewById(R.id.menu);
         iconCalendar = findViewById(R.id.iconCalendar);
         iconHome = findViewById(R.id.iconHome);
         iconProfile = findViewById(R.id.iconProfile);
-        View btnHome = findViewById(R.id.btnHome);
 
-        // Marca a Home como selecionada logo ao abrir o app
-        if (btnHome != null) {
-            btnHome.setSelected(true);
-        }
+        bntHome = menuView.findViewById(R.id.btnHome);
+        bntCalendar = menuView.findViewById(R.id.btnCalendar);
+        bntProfile = menuView.findViewById(R.id.btnProfile);
 
+        if (bntHome != null) bntHome.setSelected(true);
         btnStartWorkout = findViewById(R.id.btnStartWorkout);
     }
 
@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         btnCalendar.setOnClickListener(v -> {
             startActivity(new Intent(this, MonthCalendarActivity.class));
             overridePendingTransition(0, 0);
-            finish();
         });
 
         // Clique na Home (já está nela, não precisa fazer nada ou apenas scroll up)
@@ -152,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         btnProfile.setOnClickListener(v -> {
             startActivity(new Intent(this, ProfileActivity.class));
             overridePendingTransition(0, 0);
-            finish();
         });
 
         // Botão de Iniciar Treino (Lógica separada do menu)
@@ -173,8 +171,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
         // cria o adapter (responsável por desenhar cada dia)
-        CalendarAdapter calendarAdapter = new CalendarAdapter(days, this);
-
+        CalendarAdapter calendarAdapter = new CalendarAdapter(days, this, R.drawable.selected_day_bg);
         // define layout em grade com 7 colunas
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 7);
 

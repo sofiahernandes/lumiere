@@ -110,14 +110,12 @@ public class ProfileActivity extends AppCompatActivity {
             btnCalendar.setOnClickListener(v -> {
                 startActivity(new Intent(this, MonthCalendarActivity.class));
                 overridePendingTransition(0, 0);
-                finish();
             });
 
             // Clique na Home (já está nela, não precisa fazer nada ou apenas scroll up)
             btnHome.setOnClickListener(v -> {
                 startActivity(new Intent(this, MainActivity.class));
                 overridePendingTransition(0, 0);
-                finish();
             });
 
             // Clique no Perfil
