@@ -43,7 +43,11 @@ public class NotificationService extends AppCompatActivity {
         setContentView(R.layout.notification_activity);
 
         createNotificationChannel();
-        checkPermissionAndNotify();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                activityResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
     }
 
     private void createNotificationChannel() {
@@ -58,29 +62,6 @@ public class NotificationService extends AppCompatActivity {
             if (manager != null) {
                 manager.createNotificationChannel(channel);
             }
-        }
-    }
-
-    private void checkPermissionAndNotify() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            activityResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-        } else {
-            sendNotification();
-        }
-    }
-
-    private void sendNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.baseline_notifications_24)
-                .setContentTitle("Fisioterapia")
-                .setContentText("Agendamento com Maya Yamamoto")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true); // Fecha a notificação ao clicar
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.notify(10, builder.build());
         }
     }
 }
