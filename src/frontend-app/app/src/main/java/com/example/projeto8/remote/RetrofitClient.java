@@ -2,6 +2,7 @@ package com.example.projeto8.remote;
 
 import android.content.Context;
 
+import com.example.projeto8.api.appointment.AppointmentService;
 import com.example.projeto8.api.exerciseSession.ExerciseSessionService;
 import com.example.projeto8.api.patient.PatientService;
 import com.example.projeto8.api.workout.WorkoutService;
@@ -86,5 +87,10 @@ public class RetrofitClient {
         public static ExerciseSessionService getExerciseService() {
             return getRetrofitInstance().create(ExerciseSessionService.class);
         }
+
+        public static AppointmentService getAppointmentService(){
+        return getRetrofitInstance().create(getAppointmentService.class);
+        }
+
 
 }
