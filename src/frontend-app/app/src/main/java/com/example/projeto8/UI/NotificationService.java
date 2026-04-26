@@ -43,12 +43,7 @@ public class NotificationService extends AppCompatActivity {
         setContentView(R.layout.notification_activity);
 
         createNotificationChannel();
-
-        Button postNotification = findViewById(R.id.btnNotif);
-
-        postNotification.setOnClickListener(v -> {
-            checkPermissionAndNotify();
-        });
+        checkPermissionAndNotify();
     }
 
     private void createNotificationChannel() {

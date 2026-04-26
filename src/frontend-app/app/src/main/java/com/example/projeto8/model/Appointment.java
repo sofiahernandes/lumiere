@@ -6,16 +6,16 @@ import java.util.UUID;
 public class Appointment {
 
     private UUID appointment_id;
-    private LocalDateTime date;
+    private String date;
     private String time;
     private String description;
-    private Patient patient;
+    private UUID patient_id;
 
     public UUID getAppointment_id() {
         return appointment_id;
     }
 
-    public LocalDateTime getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -27,8 +27,8 @@ public class Appointment {
         return description;
     }
 
-    public Patient getPatientAppt() {
-        return patient;
+    public UUID getPatientAppt() {
+        return patient_id;
     }
 
 }
