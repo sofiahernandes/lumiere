@@ -22,7 +22,7 @@ public class AppointmentService {
     @Autowired
     private PatientRepository patientRepository;
 
-    // criar horario dentro da maya
+    // create appointment
     public AppointmentEntity createAppointment(AppointmentRequestDTO data) {
         PatientEntity patient = patientRepository.findById(data.patient_id())
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
@@ -66,21 +66,23 @@ public class AppointmentService {
         );
     }
 
-    public List<AppointmentResponseDTO> getAppointmentsByPatient(UUID patient_id) {
-        PatientEntity patient = patientRepository.findById(patient_id)
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+    public List<AppointmentResponseDTO> getAppointmentsByPatient(UUID patientId) {
+        if (!patientRepository.existsById(patientId)) {
+            throw new RuntimeException("Paciente não encontrado");
+        }
 
-        List<AppointmentEntity> appointments = appointmentRepository.findByPatient(patient.getPatient_ID());
+        List<AppointmentEntity> appointments = appointmentRepository.findByPatientId(patientId);
 
-        return appointments.stream().map(entity -> new AppointmentResponseDTO(
-                entity.getAppointment_id(),
-                entity.getDate(),
-                entity.getTime(),
-                entity.getDescription(),
-                entity.getPatient().getPatient_ID()
-        )).toList();
+        return appointments.stream()
+                .map(entity -> new AppointmentResponseDTO(
+                        entity.getAppointment_id(),
+                        entity.getDate(),
+                        entity.getTime(),
+                        entity.getDescription(),
+                        patientId
+                ))
+                .toList();
     }
-
     //get appointments by day
 
     public List<AppointmentResponseDTO> getAppointmentsByDate(LocalDateTime date) {
