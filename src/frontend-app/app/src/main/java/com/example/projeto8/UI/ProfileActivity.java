@@ -2,10 +2,14 @@ package com.example.projeto8.UI;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -28,6 +32,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextView txtName, txtStatus, txtEmail, txtCpf, txtBirthDate,
             txtGender, txtHeight, txtWeight;
+    LinearLayout btnExcluir;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,32 @@ public class ProfileActivity extends AppCompatActivity {
         iconProfile = findViewById(R.id.iconProfile);
         setupMenuClicks();
         iconProfile.setSelected(true);
+
+
+        btnExcluir = findViewById(R.id.btnExcluirConta);
+
+        btnExcluir.setOnClickListener(v -> {
+            View view = getLayoutInflater().inflate(R.layout.dialog_delete, null);
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+            builder.setView(view);
+
+            android.app.AlertDialog dialog = builder.create();
+
+            // IMPORTANTE: Isso torna o fundo do sistema transparente para o nosso card aparecer redondo
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
+
+            view.findViewById(R.id.btnCancel).setOnClickListener(v1 -> dialog.dismiss());
+            view.findViewById(R.id.btnDelete).setOnClickListener(v1 -> {
+                // Lógica de deletar
+                dialog.dismiss();
+            });
+
+            dialog.show();
+            view.findViewById(R.id.cardContent).setClipToOutline(true);
+        });
+
 
         // ====== PEGAR NOME DO LOGIN ======
         SharedPreferences prefs = getSharedPreferences("STORAGE", MODE_PRIVATE);

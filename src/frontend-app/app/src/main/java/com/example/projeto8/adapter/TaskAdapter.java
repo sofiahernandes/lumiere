@@ -76,11 +76,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             notifyItemChanged(position);
         });
 
-        // Lógica da Seta: se expandido, gira 180 graus (fica para cima)
+
         if (task.isExpanded) {
-            holder.imgArrow.setRotation(180f);
+            holder.imgArrow.setRotation(270f);
         } else {
-            holder.imgArrow.setRotation(0f);
+            holder.imgArrow.setRotation(90f);
         }
         holder.container.setOnClickListener(v -> {
             task.isExpanded = !task.isExpanded;

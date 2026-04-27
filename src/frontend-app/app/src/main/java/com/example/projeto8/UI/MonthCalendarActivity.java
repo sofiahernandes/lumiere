@@ -20,6 +20,7 @@ import com.example.projeto8.adapter.TaskAdapter;
 import com.example.projeto8.model.Task;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -90,8 +91,7 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
 
-        carregarDadosMockados();
-        updateSelectedDateText();
+
     }
 
     public void setupMenuClicks() {
@@ -133,16 +133,6 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         selectedDateTV.setText(formatted.substring(0, 1).toUpperCase() + formatted.substring(1));
     }
 
-    private void carregarDadosMockados() {
-        tasksParaExibir.clear();
-        int diaSema = CalendarUtils.selectedDate.getDayOfWeek().getValue();
-        if (diaSema < 6) {
-            tasksParaExibir.add(new Task(1L, "Exercício de Agenda A", 3, 12, "https://www.youtube.com/watch?v=aclHkVaku9U", "Descrição Mockada"));
-        } else {
-            tasksParaExibir.add(new Task(-1L, "Final de semana! Descanso.", 0, 0, "", ""));
-        }
-        taskAdapter.notifyDataSetChanged();
-    }
 
     public void previousMonthAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);

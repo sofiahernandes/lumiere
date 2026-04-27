@@ -73,9 +73,10 @@
             android:orientation="horizontal"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp">
+
             <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/chevron"
                 android:scaleType="fitStart"
                 android:rotation="180"
@@ -93,13 +94,14 @@
                 android:textSize="20sp"/>
 
             <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/chevron"
                 android:scaleType="fitEnd"
                 android:onClick="nextWeekAction"
                 android:contentDescription="Próximo"
                 android:background="?attr/selectableItemBackground" />
+
         </LinearLayout>
 
         <!-- DIAS DA SEMANA -->
@@ -145,8 +147,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/calendarRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:minHeight="200dp"
+            android:layout_height="100dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="20dp"/>
 
