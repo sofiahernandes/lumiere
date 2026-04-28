@@ -102,14 +102,14 @@ export default function AddPatientPage() {
             type="date"
             value={form.birthDate}
             onChange={handleChange('birthDate')}
-            className="col-span-5 rounded-md border p-3 border-neutral-300 outline-none focus:border-blue transition-all"
+            className="col-span-full lg:col-span-5 rounded-md border p-3 border-neutral-300 outline-none focus:border-blue transition-all"
             required
           />
           <input
             value={form.cpf}
             onChange={handleChange('cpf')}
             placeholder="CPF*"
-            className="col-span-7 rounded-md border p-3 border-neutral-300 outline-none focus:border-blue transition-all"
+            className="col-span-full lg:col-span-7 rounded-md border p-3 border-neutral-300 outline-none focus:border-blue transition-all"
             required
           />
           <input
@@ -122,7 +122,7 @@ export default function AddPatientPage() {
           <select
             value={form.gender}
             onChange={handleChange('gender')}
-            className="col-span-4 rounded-md border p-3 bg-white border-neutral-300 outline-none focus:border-blue transition-all"
+            className="col-span-full lg:col-span-4 rounded-md border p-3 bg-white border-neutral-300 outline-none focus:border-blue transition-all"
           >
             <option value="">Gênero</option>
             <option value="MASCULINO">Masculino</option>
@@ -134,7 +134,7 @@ export default function AddPatientPage() {
             value={form.height}
             onChange={handleChange('height')}
             placeholder="Altura (m)"
-            className="col-span-4 rounded-md border p-3 border-neutral-300 outline-none focus:border-blue transition-all"
+            className="col-span-full lg:col-span-4 rounded-md border p-3 border-neutral-300 outline-none focus:border-blue transition-all"
           />
           <input
             type="number"
@@ -142,7 +142,7 @@ export default function AddPatientPage() {
             value={form.weight}
             onChange={handleChange('weight')}
             placeholder="Peso (kg)"
-            className="col-span-4 rounded-md border p-3 border-neutral-300 outline-none focus:border-blue transition-all"
+            className="col-span-full lg:col-span-4 rounded-md border p-3 border-neutral-300 outline-none focus:border-blue transition-all"
           />
 
           <textarea
