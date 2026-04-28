@@ -141,13 +141,14 @@ export default function CalendarsPage() {
         </h2>
 
         {/* Dropdown de pacientes */}
-        <div className="mt-4 max-w-md">
+        <div className="mt-4 max-w-md rounded-md!">
           <Select
             instanceId="patient-select-main"
             options={patientOptions}
             value={
               patientOptions.find((opt) => opt.value === selectedId) || null
             }
+            className='rounded-md!'
             placeholder="Selecione um paciente..."
             isClearable
             onChange={(opt: any) => setSelectedId(opt?.value || '')}

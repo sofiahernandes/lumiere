@@ -58,7 +58,7 @@ export default function ExercisesPage() {
   }
 
   return (
-    <section className="grid grid-cols-4 items-start gap-4 md:grid-cols-12">
+    <section className="grid grid-cols-4 items-start gap-x-4 gap-y-12 md:grid-cols-12">
       <header className="col-span-full">
         <h1 className="font-display text-4xl pt-6">Cadastro de Exercícios</h1>
       </header>
