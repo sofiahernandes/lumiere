@@ -118,7 +118,7 @@ export default function ExercisesPage() {
 
           <div className="col-span-full flex gap-2">
             <button
-              className={`flex-1 rounded-md mt-2 px-3 py-4 text-neutral transition-all duration-300 ease-in-out ${
+              className={`flex-1 rounded-md font-semibold mt-2 px-3 py-4 text-neutral transition-all duration-300 ease-in-out ${
                 editingId
                   ? 'bg-dark-blue hover:bg-blue'
                   : 'bg-dark-blue hover:bg-blue'
@@ -174,7 +174,7 @@ export default function ExercisesPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEditClick(exercise)}
-                    className="p-1.5 rounded-md hover:bg-light-blue transition-colors bg-white/50 border border-slate-200"
+                    className="p-1.5 rounded-md hover:opacity-60 transition-colors bg-white/50 border border-slate-200"
                     title="Editar Exercício"
                   >
                     <Image

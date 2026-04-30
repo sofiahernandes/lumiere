@@ -48,7 +48,7 @@ export function Sidebar() {
               className={`flex items-center h-11 rounded-md font-semibold overflow-hidden transition-all duration-300 ease-in-out ${
                 active
                   ? 'gap-3 px-4 bg-dark-blue text-neutral'
-                  : 'w-11 justify-center px-0 bg-light-blue/45 text-black hover:bg-light-blue'
+                  : 'w-11 justify-center px-0 bg-blue/45 text-black hover:bg-blue'
               }`}
             >
               <span
