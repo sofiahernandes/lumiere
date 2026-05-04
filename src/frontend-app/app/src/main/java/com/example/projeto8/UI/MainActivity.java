@@ -19,12 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import com.example.projeto8.R;
 import com.example.projeto8.adapter.TaskAdapter;
+import com.example.projeto8.api.appointment.AppointmentResponseDTO.AppointmentResponseDTO;
+import com.example.projeto8.api.appointment.AppointmentService;
 import com.example.projeto8.model.Exercise;
 import com.example.projeto8.model.ExerciseSession;
 import com.example.projeto8.model.Task;
@@ -53,8 +56,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     protected void onResume() {
         super.onResume();
 
-        // SharedPreferences prefs = getSharedPreferences("STORAGE", MODE_PRIVATE);
-        /*
+        SharedPreferences prefs = getSharedPreferences("STORAGE", MODE_PRIVATE);
+
         String idRecebido = prefs.getString("patient_id", null);
         String nomeRecebido = prefs.getString("patient_name", null);
 
@@ -63,11 +66,9 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         }
 
         if (idRecebido != null) {
-            WorkoutSeshData(idRecebido);
+            WorkoutSeshData(idRecebido); //Busca os exercícios associados ao paciente
             checkAppointmentsData(idRecebido); //Busca os agendamentos do paciente
         }
-        */
-        carregarDadosMockados();
     }
 
     @Override
@@ -245,22 +246,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             default: return "";
         }
     }
-    private void carregarDadosMockados() {
-        tasksParaExibir.clear();
 
-        // Adicionando exercícios de teste
-        tasksParaExibir.add(new Task(1L, "Agachamento Livre", 3, 15, "https://www.youtube.com/watch?v=aclHkVaku9U", "Mantenha as costas retas e desça até 90 graus."));
-        tasksParaExibir.add(new Task(2L, "Flexão de Braços", 4, 10, "https://www.youtube.com/watch?v=vp7pYV4X_O4", "Mantenha o corpo alinhado, sem descer o quadril."));
-        tasksParaExibir.add(new Task(3L, "Prancha Abdominal", 3, 30, "https://www.youtube.com/watch?v=pvIjsGZ0Zbc", "Segure por 30 segundos mantendo o core contraído."));
-
-        // Atualiza a interface
-        adapter.notifyDataSetChanged();
-
-        // Faz o botão aparecer, já que agora temos dados
-        if (btnStartWorkout != null) {
-            btnStartWorkout.setVisibility(View.VISIBLE);
-        }
-    }
     //Mostrar a Workout do dia
     private void WorkoutSeshData(String patientId) {
         WorkoutService api = RetrofitClient.getWorkoutService();

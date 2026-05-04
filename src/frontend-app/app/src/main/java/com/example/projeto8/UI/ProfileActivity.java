@@ -15,7 +15,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.projeto8.R;
-import com.example.projeto8.api.patient.PatientDTO.PatientResponseDTO;
 import com.example.projeto8.api.patient.PatientService;
 import com.example.projeto8.model.Patient;
 import com.example.projeto8.remote.RetrofitClient;
@@ -213,8 +212,8 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                         } else {
                             Log.e("API_ERROR", "Resposta vazia");
-                        }
                     }
+                }
 
                     @Override
                     public void onFailure(Call<PatientResponseDTO> call, Throwable t) {
@@ -223,4 +222,3 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 }
-

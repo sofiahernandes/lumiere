@@ -104,14 +104,11 @@ public class WorkoutSessionService {
 */
 
     public List<WorkoutSesResponseDTO> getWorkoutsByPatient(UUID patientId) {
-        // 1. Primeiro buscamos o Paciente (para não dar erro de ID)
         PatientEntity patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
-        // 2. Agora buscamos os treinos desse objeto 'patient'
         List<WorkoutSessionEntity> workouts = workoutSessionRepository.findByPatient(patient);
 
-        // 3. Transformamos a lista de Entities em uma lista de DTOs (o pacote para o Android)
         return workouts.stream().map(entity -> new WorkoutSesResponseDTO(
                 entity.getWorkoutSession_id(),
                 entity.getWeekDay(),
@@ -135,7 +132,6 @@ public class WorkoutSessionService {
                 )).toList()
         )).toList();
     }
-
 
 
     //Buscar todas as workout sessions de todos os pacientes
