@@ -18,21 +18,18 @@ public class WorkoutSession {
     }
 
     // ADICIONE ESTA LINHA:
-    private String patient;
+    private Patient patient;
 
     // ADICIONE ESTA LISTA (para os exercícios como agachamento):
-    private List<ExerciseSession> exercises;
+    private List<ExerciseSession> exerciseSessions;
 
     // ADICIONE ESTES GETTERS (O Android precisa deles para ler os dados):
-    public String getPatient() {
+    public Patient getPatient() {
         return patient;
     }
 
-    public void setPatient(String patient) {
-        this.patient = patient;
-    }
-    public List<ExerciseSession> getExercises() {
-        return exercises;
+    public List<ExerciseSession> getExerciseSessions() {
+        return exerciseSessions;
     }
 
     public String getWeekDay() { return weekDay; }

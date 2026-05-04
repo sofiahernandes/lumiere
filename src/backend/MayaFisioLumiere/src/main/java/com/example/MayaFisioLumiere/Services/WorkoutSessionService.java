@@ -55,7 +55,7 @@ public class WorkoutSessionService {
 
         workout.setChecked(true);
         if (workout.getChecked() == true) {
-                workout.setWorkoutDate(LocalDate.now());
+            workout.setWorkoutDate(LocalDate.now());
         }
         //atualiza ststaus do paciente
         checkPatientStatus(workout.getPatient().getPatient_ID());
@@ -114,15 +114,14 @@ public class WorkoutSessionService {
                 entity.getWeekDay(),
                 entity.getChecked(),
                 entity.getPatient().getPatient_ID(),
-                // Mapeando a lista de exercícios que está dentro do treino
                 entity.getExerciseSessions().stream().map(ex -> new ExerciseSessionResponseDTO(
                         Math.toIntExact(ex.getExercisesession_id()),
                         new ExerciseResponseDTO(
-                                ex.getExercise().getExercise_ID(),
-                                ex.getExercise().getTitle(),
-                                ex.getExercise().getMidiaURL(),
-                                ex.getExercise().getTags(),
-                                ex.getExercise().getDescription()
+                           ex.getExercise().getExercise_ID(),
+                           ex.getExercise().getTitle(),
+                           ex.getExercise().getMidiaURL(),
+                           ex.getExercise().getTags(),
+                           ex.getExercise().getDescription()
                         ),
                         ex.getWorkoutSession().getWorkoutSession_id(),
                         ex.getPatient().getPatient_ID(),

@@ -37,9 +37,9 @@ public class AppointmentController {
 
     //criar agendamento pela uuid do paciente
     @GetMapping("/patient/{uuid}")
-    public ResponseEntity<?> getAppointmentsByPatient(@PathVariable UUID uuid) {
+    public ResponseEntity<?> getAppointmentsByPatient(@PathVariable("uuid") UUID patientId) {
         try {
-            List<AppointmentResponseDTO> appointments = appointmentService.getAppointmentsByPatient(uuid);
+            List<AppointmentResponseDTO> appointments = appointmentService.getAppointmentsByPatient(patientId);
             return ResponseEntity.ok(appointments);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
