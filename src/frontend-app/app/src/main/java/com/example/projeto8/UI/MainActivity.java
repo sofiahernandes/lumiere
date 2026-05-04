@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     private TaskAdapter adapter;
     private ArrayList<Task> tasksParaExibir;
     ImageView iconHome, iconCalendar, iconProfile; // menu
-    View bntHome,bntCalendar,bntProfile;
+    View btnHome,btnCalendar,btnProfile;
+    View containerHome, containerCalendar, containerProfile;
     private Button btnStartWorkout;
 
     @Override
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     }
 
-    private void initWidgets() {
+    public void initWidgets() {
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
 
@@ -121,34 +122,38 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         iconHome = findViewById(R.id.iconHome);
         iconProfile = findViewById(R.id.iconProfile);
 
-        bntHome = menuView.findViewById(R.id.btnHome);
-        bntCalendar = menuView.findViewById(R.id.btnCalendar);
-        bntProfile = menuView.findViewById(R.id.btnProfile);
+        btnHome = menuView.findViewById(R.id.btnHome);
+        btnCalendar = menuView.findViewById(R.id.btnCalendar);
+        btnProfile = menuView.findViewById(R.id.btnProfile);
 
-        if (bntHome != null) bntHome.setSelected(true);
+        containerHome = menuView.findViewById(R.id.containerHomeSelect);
+
+        if (btnHome != null) btnHome.setSelected(true);
         btnStartWorkout = findViewById(R.id.btnStartWorkout);
     }
 
-    private void setupMenuClicks() {
-
-        // Pegamos os layouts dos botões
-        View btnCalendar = findViewById(R.id.btnCalendar);
-        View btnHome = findViewById(R.id.btnHome);
-        View btnProfile = findViewById(R.id.btnProfile);
-
-        // Configura o clique da Agenda
+    public void setupMenuClicks() {
         btnCalendar.setOnClickListener(v -> {
+            updateMenuSelection(btnCalendar, containerCalendar,
+                    btnHome, containerHome, btnProfile, containerProfile);
+
             startActivity(new Intent(this, MonthCalendarActivity.class));
             overridePendingTransition(0, 0);
         });
 
-        // Clique na Home (já está nela, não precisa fazer nada ou apenas scroll up)
+        // Clique na Home
         btnHome.setOnClickListener(v -> {
+            updateMenuSelection(btnHome, containerHome,
+                    btnCalendar, containerCalendar, btnProfile, containerProfile);
+
             recyclerTasks.smoothScrollToPosition(0);
         });
 
         // Clique no Perfil
         btnProfile.setOnClickListener(v -> {
+            updateMenuSelection(btnProfile, containerProfile,
+                    btnCalendar, containerCalendar, btnHome, containerHome);
+
             startActivity(new Intent(this, ProfileActivity.class));
             overridePendingTransition(0, 0);
         });
@@ -159,6 +164,25 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             intent.putParcelableArrayListExtra("LISTA_EXERCICIOS", tasksParaExibir);
             startActivity(intent);
         });
+    }
+
+    private void updateMenuSelection(View selectedBtn, View selectedContainer, View... others) {
+        // Desmarca todos os outros e remove o fundo
+        for (View view : others) {
+            if (view != null) {
+                view.setSelected(false);
+                // Se for um container (verificamos pela ID), removemos o fundo
+                if (view == containerHome || view == containerCalendar || view == containerProfile) {
+                    view.setBackground(null);
+                }
+            }
+        }
+
+        // Ativa o selecionado
+        if (selectedBtn != null) selectedBtn.setSelected(true);
+        if (selectedContainer != null) {
+            selectedContainer.setBackgroundResource(R.drawable.selected_item_bg);
+        }
     }
 
     // Monta o calendário semanal

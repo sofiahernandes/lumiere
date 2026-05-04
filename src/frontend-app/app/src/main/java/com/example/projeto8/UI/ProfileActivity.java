@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,12 +27,12 @@ import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private ImageView iconHome, iconCalendar, iconProfile;
-
     private TextView txtName, txtStatus, txtEmail, txtCpf, txtBirthDate,
             txtGender, txtHeight, txtWeight;
-    LinearLayout btnExcluir;
+    private LinearLayout btnExcluir;
 
+    private View btnCalendar, btnHome, btnProfile;
+    private View containerCalendar, containerHome, containerProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,12 @@ public class ProfileActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
 
-        // ====== INICIALIZA VIEWS ======
+        initWidgets();
+        setupMenuClicks();
+    }
+
+    private void initWidgets() {
+
         txtName = findViewById(R.id.txtName);
         txtStatus = findViewById(R.id.txtStatus);
         txtEmail = findViewById(R.id.txtEmail);
@@ -50,108 +54,120 @@ public class ProfileActivity extends AppCompatActivity {
         txtGender = findViewById(R.id.txtGender);
         txtHeight = findViewById(R.id.txtHeight);
         txtWeight = findViewById(R.id.txtWeight);
-
-        // ====== MENU ======
-        iconHome = findViewById(R.id.iconHome);
-        iconCalendar = findViewById(R.id.iconCalendar);
-        iconProfile = findViewById(R.id.iconProfile);
-        setupMenuClicks();
-        iconProfile.setSelected(true);
-
-
         btnExcluir = findViewById(R.id.btnExcluirConta);
 
-        btnExcluir.setOnClickListener(v -> {
-            View view = getLayoutInflater().inflate(R.layout.dialog_delete, null);
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-            builder.setView(view);
+        View menuInclude = findViewById(R.id.menu);
+        if (menuInclude != null) {
+            btnHome = menuInclude.findViewById(R.id.btnHome);
+            btnCalendar = menuInclude.findViewById(R.id.btnCalendar);
+            btnProfile = menuInclude.findViewById(R.id.btnProfile);
 
-            android.app.AlertDialog dialog = builder.create();
+            containerHome = menuInclude.findViewById(R.id.containerHomeSelect);
+            containerCalendar = menuInclude.findViewById(R.id.containerCalendarSelect);
+            containerProfile = menuInclude.findViewById(R.id.containerProfileSelect);
 
-            // IMPORTANTE: Isso torna o fundo do sistema transparente para o nosso card aparecer redondo
-            if (dialog.getWindow() != null) {
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (btnProfile != null) {
+                btnProfile.setSelected(true);
+                if (containerProfile != null) {
+                    containerProfile.setBackgroundResource(R.drawable.selected_item_bg);
+                }
             }
-
-            view.findViewById(R.id.btnCancel).setOnClickListener(v1 -> dialog.dismiss());
-            view.findViewById(R.id.btnDelete).setOnClickListener(v1 -> {
-                // Lógica de deletar
-                dialog.dismiss();
-            });
-
-            dialog.show();
-            view.findViewById(R.id.cardContent).setClipToOutline(true);
-        });
+        }
 
 
-        // ====== PEGAR NOME DO LOGIN ======
+        btnExcluir.setOnClickListener(v -> showDeleteDialog());
+
+
         SharedPreferences prefs = getSharedPreferences("STORAGE", MODE_PRIVATE);
         String name = prefs.getString("patient_name", null);
-
         if (name != null) {
             loadPatient(name);
-        } else {
-            Log.e("PROFILE", "Nome não encontrado no SharedPreferences");
+        }
+
+    }
+
+    public void setupMenuClicks() {
+        // Clique no Perfil (Já está nele)
+        btnProfile.setOnClickListener(v -> {
+            updateMenuSelection(btnProfile, containerProfile, btnHome, containerHome, btnCalendar, containerCalendar);
+        });
+
+        // Clique na Home
+        btnHome.setOnClickListener(v -> {
+            updateMenuSelection(btnHome, containerHome, btnProfile, containerProfile, btnCalendar, containerCalendar);
+            startActivity(new Intent(this, MainActivity.class));
+            overridePendingTransition(0, 0);
+            finish();
+        });
+
+        // Clique na Agenda
+        btnCalendar.setOnClickListener(v -> {
+            updateMenuSelection(btnCalendar, containerCalendar, btnHome, containerHome, btnProfile, containerProfile);
+            startActivity(new Intent(this, MonthCalendarActivity.class));
+            overridePendingTransition(0, 0);
+            finish();
+        });
+    }
+
+    private void updateMenuSelection(View selectedBtn, View selectedContainer, View... others) {
+        for (View view : others) {
+            if (view != null) {
+                view.setSelected(false);
+                // Limpa o fundo dos containers inativos
+                if (view == containerHome || view == containerCalendar || view == containerProfile) {
+                    view.setBackground(null);
+                }
+            }
+        }
+
+        if (selectedBtn != null) selectedBtn.setSelected(true);
+        if (selectedContainer != null) {
+            selectedContainer.setBackgroundResource(R.drawable.selected_item_bg);
         }
     }
 
-    // ====== BUSCAR PACIENTE PELO NOME ======
+    private void showDeleteDialog() {
+        View view = getLayoutInflater().inflate(R.layout.dialog_delete, null);
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setView(view);
+
+        android.app.AlertDialog dialog = builder.create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        view.findViewById(R.id.btnCancel).setOnClickListener(v1 -> dialog.dismiss());
+        view.findViewById(R.id.btnDelete).setOnClickListener(v1 -> {
+            // Lógica de deletar aqui
+            dialog.dismiss();
+        });
+
+        dialog.show();
+        view.findViewById(R.id.cardContent).setClipToOutline(true);
+    }
+
     private void loadPatient(String name) {
         PatientService service = RetrofitClient.getPatientService();
+        service.getPatientByFullName(name, null).enqueue(new Callback<List<Patient>>() {
+            @Override
+            public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    Patient p = response.body().get(0);
+                    txtName.setText(p.getName() + " " + p.getSurname());
+                    txtStatus.setText("Status: " + p.getStatus());
+                    txtEmail.setText(p.getEmail());
+                    txtCpf.setText(p.getCpf());
+                    txtBirthDate.setText(p.getBirthDate());
+                    txtGender.setText(p.getGender());
+                    txtHeight.setText(p.getHeight());
+                    txtWeight.setText(p.getWeight());
+                }
+            }
 
-        service.getPatientByFullName(name, null) // surname = null
-                .enqueue(new Callback<List<Patient>>() {
-
-                    @Override
-                    public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
-                        if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-
-                            Patient p = response.body().get(0); // pega o primeiro
-
-                            txtName.setText(p.getName() + " " + p.getSurname());
-                            txtStatus.setText("Status: " + p.getStatus());
-
-                            txtEmail.setText(p.getEmail());
-                            txtCpf.setText(p.getCpf());
-                            txtBirthDate.setText(p.getBirthDate());
-
-                            txtGender.setText(p.getGender());
-                            txtHeight.setText(p.getHeight());
-                            txtWeight.setText(p.getWeight());
-
-                        } else {
-                            Log.e("API_ERROR", "Resposta vazia");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Patient>> call, Throwable t) {
-                        Log.e("API_ERROR", "Erro: " + t.getMessage());
-                    }
-                });
+            @Override
+            public void onFailure(Call<List<Patient>> call, Throwable t) {
+                Log.e("API_ERROR", "Erro: " + t.getMessage());
+            }
+        });
     }
-
-
-        public void setupMenuClicks() {
-            // Pegamos os layouts dos botões
-            View btnCalendar = findViewById(R.id.btnCalendar);
-            View btnHome = findViewById(R.id.btnHome);
-            View btnProfile = findViewById(R.id.btnProfile);
-
-            // Configura o clique da Agenda
-            btnCalendar.setOnClickListener(v -> {
-                startActivity(new Intent(this, MonthCalendarActivity.class));
-                overridePendingTransition(0, 0);
-            });
-
-            // Clique na Home (já está nela, não precisa fazer nada ou apenas scroll up)
-            btnHome.setOnClickListener(v -> {
-                startActivity(new Intent(this, MainActivity.class));
-                overridePendingTransition(0, 0);
-            });
-
-            // Clique no Perfil
-            btnProfile.setOnClickListener(v -> {
-            });
-        }
-    }
+}

@@ -29,11 +29,9 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
 
     private TextView monthYearText, selectedDateTV;
     private RecyclerView calendarRecyclerView;
-    private RecyclerView recyclerTasks;
-    private TaskAdapter taskAdapter;
-    private ArrayList<Task> tasksParaExibir;
+    private View btnCalendar, btnHome, btnProfile;
+    private View containerCalendar, containerHome, containerProfile;
 
-    // Removido declarações duplicadas e não utilizadas para evitar confusão
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +47,6 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         }
 
         initWidgets();
-        setupTaskRecyclerView();
         setMonthView();
         setupMenuClicks();
     }
@@ -58,27 +55,73 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
     private void initWidgets() {
         monthYearText = findViewById(R.id.monthYearTV);
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
-        recyclerTasks = findViewById(R.id.recyclerTasks);
         selectedDateTV = findViewById(R.id.selectedDateTV);
+
         // Referência segura para o ícone selecionado
         View menuInclude = findViewById(R.id.menu);
         if (menuInclude != null) {
-            ImageView iconCalendar = menuInclude.findViewById(R.id.iconCalendar);
-            if (iconCalendar != null) iconCalendar.setSelected(true);
+            // Botões principais para clique
+            btnCalendar = menuInclude.findViewById(R.id.btnCalendar);
+            btnHome = menuInclude.findViewById(R.id.btnHome);
+            btnProfile = menuInclude.findViewById(R.id.btnProfile);
+
+            // Containers internos para o fundo rosa (use os IDs do seu XML)
+            containerCalendar = menuInclude.findViewById(R.id.containerCalendarSelect);
+            containerHome = menuInclude.findViewById(R.id.containerHomeSelect);
+            containerProfile = menuInclude.findViewById(R.id.containerProfileSelect);
+
+            // CONFIGURAÇÃO INICIAL: Como estamos na Agenda, ela começa selecionada
+            if (btnCalendar != null) {
+                btnCalendar.setSelected(true);
+                if (containerCalendar != null) {
+                    containerCalendar.setBackgroundResource(R.drawable.selected_item_bg);
+                }
+            }
         }
+        updateMenuSelection(
+                btnCalendar, containerCalendar,
+                btnHome, containerHome,
+                btnProfile, containerProfile
+        );
     }
 
-    private void setupTaskRecyclerView() {
-        tasksParaExibir = new ArrayList<>();
-        taskAdapter = new TaskAdapter(tasksParaExibir, task -> {
-            Intent intent = new Intent(MonthCalendarActivity.this, ExercisesActivity.class);
-            intent.putExtra("EXERCISE_TITLE", task.getTitle());
-            intent.putExtra("EXERCISE_MEDIA_URL", task.getMidiaURL());
-            intent.putExtra("EXERCISE_DESC", task.getDescription());
-            startActivity(intent);
+    public void setupMenuClicks() {
+// Clique na Agenda (Já está nela, pode apenas resetar a view se quiser)
+        btnCalendar.setOnClickListener(v -> {
+            updateMenuSelection(btnCalendar, containerCalendar, btnHome, containerHome, btnProfile, containerProfile);
         });
-        recyclerTasks.setLayoutManager(new LinearLayoutManager(this));
-        recyclerTasks.setAdapter(taskAdapter);
+
+        // Clique na Home
+        btnHome.setOnClickListener(v -> {
+            updateMenuSelection(btnHome, containerHome, btnCalendar, containerCalendar, btnProfile, containerProfile);
+            startActivity(new Intent(this, MainActivity.class));
+            overridePendingTransition(0, 0);
+            finish(); // Opcional: fecha a agenda ao ir para a home
+        });
+
+        // Clique no Perfil
+        btnProfile.setOnClickListener(v -> {
+            updateMenuSelection(btnProfile, containerProfile, btnCalendar, containerCalendar, btnHome, containerHome);
+            startActivity(new Intent(this, ProfileActivity.class));
+            overridePendingTransition(0, 0);
+        });
+    }
+
+    private void updateMenuSelection(View selectedBtn, View selectedContainer, View... others) {
+        for (View view : others) {
+            if (view != null) {
+                view.setSelected(false);
+                // Se for um dos containers internos, removemos o background
+                if (view == containerHome || view == containerCalendar || view == containerProfile) {
+                    view.setBackground(null);
+                }
+            }
+        }
+
+        if (selectedBtn != null) selectedBtn.setSelected(true);
+        if (selectedContainer != null) {
+            selectedContainer.setBackgroundResource(R.drawable.selected_item_bg);
+        }
     }
 
     private void setMonthView() {
@@ -94,28 +137,7 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
 
     }
 
-    public void setupMenuClicks() {
-        // Pegamos os layouts dos botões
-        View btnCalendar = findViewById(R.id.btnCalendar);
-        View btnHome = findViewById(R.id.btnHome);
-        View btnProfile = findViewById(R.id.btnProfile);
 
-        // Configura o clique da Agenda
-        btnProfile.setOnClickListener(v -> {
-            startActivity(new Intent(this, ProfileActivity.class));
-            overridePendingTransition(0, 0);
-        });
-
-        // Clique na Home (já está nela, não precisa fazer nada ou apenas scroll up)
-        btnHome.setOnClickListener(v -> {
-            startActivity(new Intent(this, MainActivity.class));
-            overridePendingTransition(0, 0);
-        });
-
-        // Clique no Perfil
-        btnCalendar.setOnClickListener(v -> {
-        });
-    }
 
     @Override
     public void onItemClick(int position, LocalDate date) {
