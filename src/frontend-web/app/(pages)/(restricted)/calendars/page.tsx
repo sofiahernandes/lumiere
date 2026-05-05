@@ -40,14 +40,14 @@ const calendarStyles = `
   
   /* Dia selecionado */
   .react-calendar__tile--active { 
-    background: #FFB347 !important; 
+    background: #EE715F !important; 
     border-radius: 0.375rem; 
     color: white !important; 
   }
   
   /* Dia atual */
   .react-calendar__tile--now { 
-    background: #ffc16a !important; 
+    background: #EE715F !important; 
     color: white !important; 
     border-radius: 0.375rem;
     font-weight: bold;
