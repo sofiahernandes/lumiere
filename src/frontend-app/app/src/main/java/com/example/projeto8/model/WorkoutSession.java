@@ -21,13 +21,13 @@ public class WorkoutSession {
 
     private String patient;
 
+    @SerializedName("exercises")
     private List<ExerciseSession> exerciseSessions;
 
     public String getPatient() {
         return patient;
     }
 
-    @SerializedName("exercises")
     public List<ExerciseSession> exerciseSessions() {
         return exerciseSessions;
     }

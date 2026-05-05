@@ -99,7 +99,9 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         // Configurações de Menu e Calendário
         setupMenuClicks();
-        CalendarUtils.selectedDate = LocalDate.now();
+        if (CalendarUtils.selectedDate == null) {
+            CalendarUtils.selectedDate = LocalDate.now();
+        }
         setWeekView();
 
         // Busca os dados na API
@@ -302,6 +304,9 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                     tasksParaExibir.add(
                                             new Task(-1L, "Nenhum exercício para hoje! Descanse.", 0, 0, "", "")
                                     );
+                                }
+                                if (recyclerTasks.getAdapter() == null) {
+                                    recyclerTasks.setAdapter(adapter);
                                 }
                                 adapter.notifyDataSetChanged();
                                 Log.d("TESTE_API", "Exercícios carregados: " + tasksParaExibir.size());
