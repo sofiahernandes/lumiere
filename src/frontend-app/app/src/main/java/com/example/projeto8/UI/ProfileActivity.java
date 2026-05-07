@@ -50,7 +50,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void initWidgets() {
-
         // TEXTOS
         txtName = findViewById(R.id.txtName);
         txtStatus = findViewById(R.id.txtStatus);
@@ -65,7 +64,6 @@ public class ProfileActivity extends AppCompatActivity {
         txtWeight = findViewById(R.id.txtWeight);
         txtDescription = findViewById(R.id.txtDescription);
         txtLGDP = findViewById(R.id.txtLGDP);
-
 
         // MENU
         View menuInclude = findViewById(R.id.menu);
@@ -148,7 +146,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
 
-        if (selectedBtn != null) selectedBtn.setSelected(true);
+        if (selectedBtn != null) {
+            selectedBtn.setSelected(true);
+        }
 
         if (selectedContainer != null) {
             selectedContainer.setBackgroundResource(R.drawable.selected_item_bg);
@@ -207,17 +207,42 @@ public class ProfileActivity extends AppCompatActivity {
                             String lgpdStatus = patient.isLgpdCheck() ? "Aceito" : "Não Aceito";
                             txtLGDP.setText("Termos LGPD: " + lgpdStatus);
 
-                            if(patient.getDescription() != null) {
+                            if (patient.getDescription() != null) {
                                 txtDescription.setText(patient.getDescription());
                             }
                         } else {
                             Log.e("API_ERROR", "Resposta vazia");
+                        }
                     }
-                }
 
                     @Override
                     public void onFailure(Call<PatientResponseDTO> call, Throwable t) {
                         Log.e("API_ERROR", "Falha na requisição: " + t.getMessage());
+                    }
+                });
+    }
+
+    private void loadWeeklyProgress(String patientId) {
+        PatientService service = RetrofitClient.getPatientService();
+        RetrofitClient.getWorkoutService().getWeeklyProgress(patientId)
+                .enqueue(new Callback<Map<String, Integer>>() {
+                    @Override
+                    public void onResponse(Call<Map<String, Integer>> call, Response<Map<String, Integer>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            Integer total = response.body().get("total");
+                            Integer completed = response.body().get("completed");
+
+                            if (total != null && completed != null) {
+                                pbWorkouts.setMax(total);
+                                pbWorkouts.setProgress(completed);
+                                txtWorkoutCount.setText(completed + " de " + total + " treinos concluídos nos últimos 7 dias");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Map<String, Integer>> call, Throwable t) {
+                        Log.e("PROFILE", "Erro ao carregar progresso: " + t.getMessage());
                     }
                 });
     }
