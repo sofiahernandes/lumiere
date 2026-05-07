@@ -281,21 +281,23 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                                 int serie = session.getSerie();
                                                 int reps = session.getRepetitions();
                                                 String titulo = "Exercício s/ nome";
-                                                Long exercise_id = -1L;
                                                 String midiaURL = "";
                                                 String description = "";
+
+                                                Long session_id = -1L;
+                                                if (session.getExercisesession_id() != null) {
+                                                    session_id = session.getExercisesession_id();
+                                                }
 
                                                 if (session.getExercise() != null) {
                                                     if (session.getExercise().getTitle() != null)
                                                         titulo = session.getExercise().getTitle();
-                                                    if (session.getExercise().getExercise_id() != null)
-                                                        exercise_id = session.getExercise().getExercise_id();
                                                     if (session.getExercise().getMidiaURL() != null)
                                                         midiaURL = session.getExercise().getMidiaURL();
                                                     if (session.getExercise().getDescription() != null)
                                                         description = session.getExercise().getDescription();
                                                 }
-                                                tasksParaExibir.add(new Task(exercise_id, titulo, serie, reps, midiaURL, description));
+                                                tasksParaExibir.add(new Task(session_id, titulo, serie, reps, midiaURL, description));
                                             }
                                         }
                                     }
