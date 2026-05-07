@@ -205,7 +205,7 @@ export default function CalendarsPage() {
           Selecione o Paciente
         </h2>
 
-        <div className="mt-4 max-w-md">
+        <div className="mt-4 max-w-md shadow-lg">
           <Select
             instanceId="patient-select-main"
             options={patientOptions}
@@ -233,7 +233,7 @@ export default function CalendarsPage() {
                   className={`py-2 px-4 rounded-md border transition-all ${
                     selectedDay === day
                       ? 'bg-salmon text-white border-salmon shadow-sm'
-                      : 'bg-white border-neutral-200 hover:bg-neutral-50'
+                      : 'bg-white border-neutral-300 shadow-lg hover:bg-neutral-50'
                   }`}
                 >
                   {day}
@@ -243,7 +243,7 @@ export default function CalendarsPage() {
 
             <form
               onSubmit={addExerciseToTempList}
-              className="mt-6 grid grid-cols-12 gap-3 p-4 rounded-md bg-white/30 border border-neutral-200"
+              className="mt-6 grid grid-cols-12 gap-3 p-4 rounded-md bg-white/30 border border-neutral-300 shadow-lg"
             >
               <div className="col-span-12 md:col-span-4">
                 <Select
@@ -294,7 +294,7 @@ export default function CalendarsPage() {
               <div className="flex flex-col mt-6 p-4 border border-dashed border-blue/30 rounded-md bg-blue/5">
                 <h3 className="mb-3 font-semibold text-dark-blue">Treino de {selectedDay} (Temporário)</h3>
                 {tempExercises.map((ex, i) => (
-                  <div key={i} className="flex justify-between items-center p-3 mb-2 rounded border border-slate-200 bg-white/30">
+                  <div key={i} className="flex justify-between items-center p-3 mb-2 rounded border border-neutral-300 bg-white/30">
                     <span><strong>{ex.exerciseTitle}</strong> | {ex.serie} x {ex.repetitions}</span>
                     <button onClick={() => removeTempExercise(i)} className="p-2 hover:bg-salmon bg-salmon/50 rounded-full">
                       <Image src="/lixo.png" alt="Deletar" className='group-hover:invert' width={20} height={20} />
@@ -314,7 +314,7 @@ export default function CalendarsPage() {
                 .map((es) => {
                   const ex = exercises.find((e) => String(e.exercise_id) === es.exercise_ID);
                   return (
-                    <article key={es.exerciseSession_ID} className={`rounded-md border p-4 transition-all ${es.isEditing ? 'border-blue bg-blue/5' : 'border-neutral-200 bg-white/30'}`}>
+                    <article key={es.exerciseSession_ID} className={`rounded-md border p-4 transition-all ${es.isEditing ? 'border-blue bg-blue/5' : 'border-neutral-300 shadow-lg bg-white/30'}`}>
                       <div className="flex justify-between items-start mb-3">
                         <p className="font-semibold text-black">{ex?.title || 'Exercício'}</p>
                         <div className="flex gap-2">
@@ -345,7 +345,7 @@ export default function CalendarsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
               <div className="md:col-span-7">
-                <div className="bg-white/30 h-fit p-6 rounded-xl border border-neutral-200">
+                <div className="bg-white/30 h-fit p-6 rounded-xl border border-neutral-300 shadow-lg">
                   <h3 className="text-lg font-semibold text-black mb-4">Selecionar Data</h3>
                   <Calendar
                     onChange={(d: any) => setSelectedDate(d)}
@@ -355,7 +355,7 @@ export default function CalendarsPage() {
                   />
                 </div>
 
-                <div className="mt-4 p-4 bg-blue/10 border border-blue-200 rounded-lg">
+                <div className="mt-4 p-4 bg-blue/10 border border-blue-200 rounded-lg shadow-lg">
                   <div className="flex items-center gap-2 mb-2">
                     {appointmentOnSelectedDate && (
                       <span className="bg-dark-blue text-white text-sm font-bold px-2 py-0.5 rounded">CONSULTA</span>
@@ -371,7 +371,7 @@ export default function CalendarsPage() {
               </div>
 
               <div className="md:col-span-5">
-                <form onSubmit={handleSchedule} className="bg-white/30 h-full p-6 rounded-xl border border-neutral-200 space-y-4">
+                <form onSubmit={handleSchedule} className="bg-white/30 h-full p-6 rounded-xl border border-neutral-300 shadow-lg space-y-4">
                   <h3 className="text-lg font-semibold text-black mb-4">Novo Agendamento</h3>
                   <div>
                     <label className="text-sm text-black/60 uppercase font-bold">Horário</label>

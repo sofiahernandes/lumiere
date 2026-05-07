@@ -117,7 +117,7 @@ export default function AddPatientPage() {
         Adicionar Paciente
       </h1>
 
-      <div className="col-span-12 md:col-span-8 bg-white/30 rounded-lg border border-neutral-200 p-6">
+      <div className="col-span-12 md:col-span-8 bg-white/30 rounded-lg border border-neutral-300 shadow-lg p-6">
         <form onSubmit={submitPatient} className="grid grid-cols-12 gap-3">
           <input
             value={form.firstName}
@@ -197,7 +197,7 @@ export default function AddPatientPage() {
         </form>
       </div>
 
-      <aside className="col-span-12 md:col-span-4 p-6 rounded-lg border border-salmon/50 h-fit">
+      <aside className="col-span-12 md:col-span-4 p-6 rounded-lg border border-salmon/50 h-fit bg-white/30 shadow-lg">
         <h2 className="text-lg font-bold text-salmon">
           Informação de Acesso
         </h2>

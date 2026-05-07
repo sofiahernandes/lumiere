@@ -70,9 +70,9 @@ export default function PatientsPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Buscar por nome"
-          className="w-full rounded-md border bg-white/30 border-neutral-300 px-3 py-2 mb-4 outline-none focus:ring-1 focus:ring-blue"
+          className="w-full rounded-md border bg-white/30 border-neutral-300 shadow-lg px-3 py-2 mb-4 outline-none focus:ring-1 focus:ring-blue"
         />
-        <div className="overflow-x-auto max-h-96 no-scrollbar rounded-lg bg-white/30 border border-neutral-200 py-3">
+        <div className="overflow-x-auto max-h-96 no-scrollbar rounded-lg bg-white/30 border border-neutral-300 shadow-lg py-3">
           <table className="w-full text-left border-collapse">
             <tbody>
               {filteredPatients.map((p) => {
@@ -117,7 +117,7 @@ export default function PatientsPage() {
       </div>
 
       {/* Prontuário e Evolução */}
-      <div className="col-span-4 md:col-span-5 flex flex-col gap-3 p-5 rounded-lg border border-neutral-200 bg-white/30">
+      <div className="col-span-4 md:col-span-5 flex flex-col gap-3 p-5 rounded-lg border border-neutral-300 shadow-lg bg-white/30">
         <div className="flex justify-between items-center pb-2">
           <h2 className="text-xl font-bold text-neutral-800">
             Prontuário e Evolução
