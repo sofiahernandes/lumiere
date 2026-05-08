@@ -46,20 +46,29 @@ O projeto possui uma arquitetura dividida em **frontend mobile, frontend web e b
 ```bash
 src
 ├── backend
-│ ├── controllers
-│ ├── routes
-│ ├── services
-│ └── database
+│ src/main/java/com/example/MayaFisioLumiere
+│ ├── Configuration
+│ ├── Controller
+│ ├── Domain
+│ ├── Entity
+│ ├── Repository
+│ └── Services
 │
 ├── frontend-app
-│ └── (Aplicativo mobile para pacientes)
+│ src/main/java/com/example/projeto8
+│ ├── adapter
+│ ├── api
+│ ├── model
+│ ├── remote
+│ ├── UI
+│ res
 │
-└── frontend-web
-├── components
-├── app
-├── services
-├── styles
-└── utils
+├── frontend-web
+│ ├── (pages)
+│ ├── actions
+│ ├── components
+│ ├── hooks
+└─├── lib
 ```
 
 **Descrição dos módulos**  
@@ -86,8 +95,10 @@ Interface administrativa utilizada pela fisioterapeuta para:
 <br/>
 
 ## 🛠 Instalação
-- **Android:**: faça o Download do app-debug.apk no seu celular. Execute o APK e siga as instruções de seu telefone.
+- **Android**: faça o Download do app-debug.apk no seu celular. Execute o APK e siga as instruções de seu telefone.
 - **Web App**: não há instalação! Acesse a [aplicação web](https://admin-lumiere.vercel.app/) através do seu browser de preferência e insira suas credenciais.
+
+<br/>
 
 ## 💻 Configuração para Desenvolvimento
 ### Pré-requisitos
@@ -102,7 +113,7 @@ Para acessar o ambiente de desenvolvimento é necessário ter instalado:
 Para acessar o ambiente de desenvolvimento do aplicativo mobile:
 1. Clone o repositório
 ```bash
-git clone https://github.com/2025-1-MCC1/Projeto8.git
+git clone https://github.com/2026-1-NCC3/Projeto8.git
 ```
 
 2. Acesse a pasta do applicativo
@@ -118,7 +129,7 @@ cd frontend-app
 ### Passo-a-passo de execução local (Acesso ao Admin)
 1. Clone o repositório
 ```bash
-git clone https://github.com/2025-1-MCC1/Projeto8.git
+git clone https://github.com/2026-1-NCC3/Projeto8.git
 ```
 
 2. Acesse a pasta do painel do administrador e instale as dependências  
