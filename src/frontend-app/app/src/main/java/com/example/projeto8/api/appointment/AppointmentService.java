@@ -13,5 +13,4 @@ public interface AppointmentService {
 
     @GET("api/appointment/patient/{patient_id}")
     Call<List<Appointment>> getAppointmentByPatient(@Path("patient_id") UUID patient_id);
-
 }

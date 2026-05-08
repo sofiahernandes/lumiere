@@ -127,6 +127,13 @@
                 android:paddingLeft="20dp"
                 android:textFontWeight="550" />
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/lightBLue"
+                android:layout_margin="8dp"
+                android:text="Cancelar agendamento"
+                />
 
 
         </LinearLayout>

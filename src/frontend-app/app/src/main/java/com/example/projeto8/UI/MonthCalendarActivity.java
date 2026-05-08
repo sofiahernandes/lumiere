@@ -1,29 +1,33 @@
 package com.example.projeto8.UI;
 
+
 import static com.example.projeto8.UI.CalendarUtils.daysInMonthArray;
 import static com.example.projeto8.UI.CalendarUtils.monthYearFromDate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projeto8.R;
-import com.example.projeto8.adapter.TaskAdapter;
-import com.example.projeto8.model.Task;
+import com.example.projeto8.model.Appointment;
+import com.example.projeto8.remote.RetrofitClient;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MonthCalendarActivity extends AppCompatActivity implements CalendarAdapter.OnItemListener {
 
@@ -32,6 +36,7 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
     private View btnCalendar, btnHome, btnProfile;
     private View containerCalendar, containerHome, containerProfile;
 
+    private List<Appointment> allAppointments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,53 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         initWidgets();
         setMonthView();
         setupMenuClicks();
+    }
+
+    private void fetchAppointments() {
+        String uuidStr = getSharedPreferences("STORAGE", MODE_PRIVATE).getString("patientId", null);
+        if (uuidStr == null) return;
+
+        UUID patientId = UUID.fromString(uuidStr);
+
+        RetrofitClient.getAppointmentService()
+                .getAppointmentByPatient(patientId)
+                .enqueue(new Callback<List<Appointment>>() {
+                    @Override
+                    public void onResponse(Call<List<Appointment>> call, Response<List<Appointment>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            allAppointments = response.body();
+                            filterByDate();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Appointment>> call, Throwable t) {
+                        Log.e("API_ERROR", "Erro ao conectar: " + t.getMessage());
+                    }
+                });
+    }
+
+    private void filterByDate() {
+        List<Appointment> filteredList = new ArrayList<>();
+
+        for (Appointment appo : allAppointments) {
+            if (appo.getDate() != null) {
+                LocalDate apiDate = LocalDate.parse(appo.getDate().substring(0, 10));
+
+                if (apiDate.equals(CalendarUtils.selectedDate)) {
+                    filteredList.add(appo);
+                }
+            }
+        }
+
+        updateUI(filteredList);
+    }
+
+    private void updateUI(List<Appointment> filteredList) {
+        // myAdapter.setAppointments(filteredList);
+        // myAdapter.notifyDataSetChanged();
+
+        updateSelectedDateText();
     }
 
 
