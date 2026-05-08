@@ -29,7 +29,6 @@ public class WorkoutSessionService {
 
     @Autowired
     private ExercisesRepository exercisesRepository; */
-
     // Criar um novo workout pegando o ID dos exercicios
     // Permitir associar mais de um exercise id
     public WorkoutSessionEntity createWorkout(WorkoutSesRequestDTO data) {
@@ -63,24 +62,23 @@ public class WorkoutSessionService {
     }
 
     // Verificar progresso desta semana
-    public Map<String, Long> getWeeklyProgress(UUID patientId) {
+    public Map<String, Object> getWeeklyProgress(UUID patientId) {
         PatientEntity patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
+        List<WorkoutSessionEntity> allWorkouts = workoutSessionRepository.findByPatient(patient);
+        long total = allWorkouts.size();
+
         LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
+        List<WorkoutSessionEntity> completedWorkouts
+                = workoutSessionRepository.findByPatientAndWorkoutDateAfterAndCheckedTrue(patient, sevenDaysAgo);
+        long completed = completedWorkouts.size();
 
-        List<WorkoutSessionEntity> workouts = workoutSessionRepository.findByPatient(patient);
+        Map<String, Object> response = new HashMap<>();
+        response.put("total", total);
+        response.put("completed", completed);
 
-        long total = workouts.size();
-        long completed = workouts.stream()
-                .filter(w -> w.getChecked() && w.getWorkoutDate() != null && w.getWorkoutDate().isAfter(sevenDaysAgo))
-                .count();
-
-        Map<String, Long> progress = new HashMap<>();
-        progress.put("total", total);
-        progress.put("completed", completed);
-
-        return progress;
+        return response;
     }
 
     // Verificar se o paciente está ativo ou inativo

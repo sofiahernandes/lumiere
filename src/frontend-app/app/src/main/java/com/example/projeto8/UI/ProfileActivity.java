@@ -7,8 +7,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -19,7 +20,7 @@ import com.example.projeto8.api.patient.PatientService;
 import com.example.projeto8.api.patient.PatientDTO.PatientResponseDTO;
 import com.example.projeto8.remote.RetrofitClient;
 
-import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,16 +28,16 @@ import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    // TEXTOS
+    // TEXTOS E UI
     private TextView txtName, txtStatus, txtEmail, txtPassword, txtCpf,
             txtCellphone, txtBirthDate, txtAge, txtGender,
-            txtHeight, txtWeight, txtDescription, txtLGDP;
+            txtHeight, txtWeight, txtDescription, txtLGDP, txtWorkoutCount;
 
-    private LinearLayout btnExcluir;
+    private ProgressBar pbWorkouts;
+    private Button btnExcluirConta;
 
     // MENU
-    private View btnCalendar, btnHome, btnProfile;
-    private View containerCalendar, containerHome, containerProfile;
+    private View containerCalendar, containerHome, containerProfile, btnCalendar, btnHome, btnProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,16 @@ public class ProfileActivity extends AppCompatActivity {
         txtDescription = findViewById(R.id.txtDescription);
         txtLGDP = findViewById(R.id.txtLGDP);
 
+        // PROGRESSO
+        pbWorkouts = findViewById(R.id.pbWorkouts);
+        txtWorkoutCount = findViewById(R.id.txtWorkoutCount);
+
+        // BOTÕES
+        btnExcluirConta = findViewById(R.id.btnExcluirConta);
+        if (btnExcluirConta != null) {
+            btnExcluirConta.setOnClickListener(v -> showDeleteDialog());
+        }
+
         // MENU
         View menuInclude = findViewById(R.id.menu);
         if (menuInclude != null) {
@@ -82,7 +93,6 @@ public class ProfileActivity extends AppCompatActivity {
                     btnCalendar, containerCalendar
             );
         }
-
     }
 
     private void loadPatientFromPrefs() {
@@ -91,139 +101,50 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (patientId != null) {
             loadPatient(patientId);
+            loadWeeklyProgress(patientId);
         } else {
             Log.e("PROFILE", "Paciente não encontrado no SharedPreferences");
         }
     }
 
-    public void setupMenuClicks() {
-
-        if (btnProfile != null) {
-            btnProfile.setOnClickListener(v -> {
-                updateMenuSelection(
-                        btnProfile, containerProfile,
-                        btnHome, containerHome,
-                        btnCalendar, containerCalendar
-                );
-            });
-        }
-
-        if (btnHome != null) {
-            btnHome.setOnClickListener(v -> {
-                updateMenuSelection(
-                        btnHome, containerHome,
-                        btnProfile, containerProfile,
-                        btnCalendar, containerCalendar
-                );
-                startActivity(new Intent(this, MainActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-            });
-        }
-
-        if (btnCalendar != null) {
-            btnCalendar.setOnClickListener(v -> {
-                updateMenuSelection(
-                        btnCalendar, containerCalendar,
-                        btnHome, containerHome,
-                        btnProfile, containerProfile
-                );
-                startActivity(new Intent(this, MonthCalendarActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-            });
-        }
-    }
-
-    private void updateMenuSelection(View selectedBtn, View selectedContainer, View... others) {
-        for (View view : others) {
-            if (view != null) {
-                view.setSelected(false);
-
-                if (view == containerHome || view == containerCalendar || view == containerProfile) {
-                    view.setBackground(null);
-                }
-            }
-        }
-
-        if (selectedBtn != null) {
-            selectedBtn.setSelected(true);
-        }
-
-        if (selectedContainer != null) {
-            selectedContainer.setBackgroundResource(R.drawable.selected_item_bg);
-        }
-    }
-
-    private void showDeleteDialog() {
-        View view = getLayoutInflater().inflate(R.layout.dialog_delete, null);
-
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setView(view);
-
-        android.app.AlertDialog dialog = builder.create();
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-
-        view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
-
-        view.findViewById(R.id.btnDelete).setOnClickListener(v -> {
-            // TODO: implementar exclusão
-            dialog.dismiss();
-        });
-
-        dialog.show();
-        view.findViewById(R.id.cardContent).setClipToOutline(true);
-    }
-
     private void loadPatient(String UUID) {
         PatientService service = RetrofitClient.getPatientService();
 
-        service.getPatientById(UUID)
-                .enqueue(new Callback<PatientResponseDTO>() {
+        service.getPatientById(UUID).enqueue(new Callback<PatientResponseDTO>() {
+            @Override
+            public void onResponse(Call<PatientResponseDTO> call, Response<PatientResponseDTO> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    PatientResponseDTO patient = response.body();
 
-                    @Override
-                    public void onResponse(Call<PatientResponseDTO> call, Response<PatientResponseDTO> response) {
-                        if (response.isSuccessful() && response.body() != null) {
+                    txtName.setText(patient.getName() + " " + patient.getSurname());
+                    txtStatus.setText("Status: " + patient.getStatus());
+                    txtEmail.setText(patient.getEmail());
+                    txtPassword.setText(patient.getPassword());
+                    txtCpf.setText(patient.getCpf());
+                    txtBirthDate.setText(patient.getBirthDate());
+                    txtGender.setText(patient.getGender());
+                    txtHeight.setText(patient.getHeight() + " m");
+                    txtWeight.setText(patient.getWeight() + " kg");
+                    txtAge.setText(String.valueOf(patient.getPatientAge()));
+                    txtCellphone.setText(patient.getCellPhone());
 
-                            PatientResponseDTO patient = response.body();
+                    String lgpdStatus = patient.isLgpdCheck() ? "Aceito" : "Não Aceito";
+                    txtLGDP.setText("Termos LGPD: " + lgpdStatus);
 
-                            txtName.setText(patient.getName() + " " + patient.getSurname());
-                            txtStatus.setText("Status: " + patient.getStatus());
-
-                            txtEmail.setText(patient.getEmail());
-                            txtPassword.setText(patient.getPassword());
-                            txtCpf.setText(patient.getCpf());
-                            txtBirthDate.setText(patient.getBirthDate());
-
-                            txtGender.setText(patient.getGender());
-                            txtHeight.setText(patient.getHeight() + " m");
-                            txtWeight.setText(patient.getWeight() + " kg");
-                            txtAge.setText(String.valueOf(patient.getPatientAge()));
-                            txtCellphone.setText(patient.getCellPhone());
-
-                            String lgpdStatus = patient.isLgpdCheck() ? "Aceito" : "Não Aceito";
-                            txtLGDP.setText("Termos LGPD: " + lgpdStatus);
-
-                            if (patient.getDescription() != null) {
-                                txtDescription.setText(patient.getDescription());
-                            }
-                        } else {
-                            Log.e("API_ERROR", "Resposta vazia");
-                        }
+                    if (patient.getDescription() != null) {
+                        txtDescription.setText(patient.getDescription());
                     }
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<PatientResponseDTO> call, Throwable t) {
-                        Log.e("API_ERROR", "Falha na requisição: " + t.getMessage());
-                    }
-                });
+            @Override
+            public void onFailure(Call<PatientResponseDTO> call, Throwable t) {
+                Log.e("API_ERROR", "Falha na requisição: " + t.getMessage());
+            }
+        });
     }
 
     private void loadWeeklyProgress(String patientId) {
-        PatientService service = RetrofitClient.getPatientService();
         RetrofitClient.getWorkoutService().getWeeklyProgress(patientId)
                 .enqueue(new Callback<Map<String, Integer>>() {
                     @Override
@@ -235,7 +156,7 @@ public class ProfileActivity extends AppCompatActivity {
                             if (total != null && completed != null) {
                                 pbWorkouts.setMax(total);
                                 pbWorkouts.setProgress(completed);
-                                txtWorkoutCount.setText(completed + " de " + total + " treinos concluídos nos últimos 7 dias");
+                                txtWorkoutCount.setText(completed + " de " + total + " treinos concluídos");
                             }
                         }
                     }
@@ -245,5 +166,63 @@ public class ProfileActivity extends AppCompatActivity {
                         Log.e("PROFILE", "Erro ao carregar progresso: " + t.getMessage());
                     }
                 });
+    }
+
+    public void setupMenuClicks() {
+        if (btnProfile != null) {
+            btnProfile.setOnClickListener(v -> updateMenuSelection(btnProfile, containerProfile, btnHome, containerHome, btnCalendar, containerCalendar));
+        }
+
+        if (btnHome != null) {
+            btnHome.setOnClickListener(v -> {
+                startActivity(new Intent(this, MainActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+            });
+        }
+
+        if (btnCalendar != null) {
+            btnCalendar.setOnClickListener(v -> {
+                startActivity(new Intent(this, MonthCalendarActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+            });
+        }
+    }
+
+    private void updateMenuSelection(View selectedBtn, View selectedContainer, View... others) {
+        for (View view : others) {
+            if (view != null) {
+                view.setSelected(false);
+                if (view == containerHome || view == containerCalendar || view == containerProfile) {
+                    view.setBackground(null);
+                }
+            }
+        }
+        if (selectedBtn != null) {
+            selectedBtn.setSelected(true);
+        }
+        if (selectedContainer != null) {
+            selectedContainer.setBackgroundResource(R.drawable.selected_item_bg);
+        }
+    }
+
+    private void showDeleteDialog() {
+        View view = getLayoutInflater().inflate(R.layout.dialog_delete, null);
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setView(view);
+        android.app.AlertDialog dialog = builder.create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
+        view.findViewById(R.id.btnDelete).setOnClickListener(v -> {
+            // Implementar lógica de exclusão aqui
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

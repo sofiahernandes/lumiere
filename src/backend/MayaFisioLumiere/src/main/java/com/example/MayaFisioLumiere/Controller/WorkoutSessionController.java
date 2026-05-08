@@ -69,7 +69,7 @@ public class WorkoutSessionController {
     // Buscar p progresso semanal do paciente
     // /workout/progress/3e8e4187-47d8-4751-955d-e6a036db9478
     @GetMapping("/progress/{patient_id}")
-    public ResponseEntity<Map<String, Long>> getWorkoutProgress(@PathVariable UUID patient_id) {
+    public ResponseEntity<Map<String, Object>> getWorkoutProgress(@PathVariable UUID patient_id) {
         return ResponseEntity.ok(workoutSessionService.getWeeklyProgress(patient_id));
     }
 
