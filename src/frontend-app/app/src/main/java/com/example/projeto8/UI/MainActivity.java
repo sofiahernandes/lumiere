@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     View containerHome, containerCalendar, containerProfile;
     private Button btnStartWorkout;
     private Long currentWorkoutId = -1L;
+    private boolean isCurrentWorkoutChecked = false;
 
     @Override
     protected void onResume() {
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             Intent intent = new Intent(MainActivity.this, ExercisesActivity.class);
             intent.putParcelableArrayListExtra("LISTA_EXERCICIOS", tasksParaExibir);
             intent.putExtra("WORKOUT_ID", currentWorkoutId);
+            intent.putExtra("IS_CHECKED", isCurrentWorkoutChecked);
             startActivity(intent);
         });
     }
@@ -258,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                     android.util.Log.d("TESTE_API", "O servidor respondeu agora!");
 
                     List<WorkoutSession> listaDeTreinos = response.body();
-
                     // TUDO que mexe na tela precisa de permissão do Android para rodar na UI Thread
                     runOnUiThread(new Runnable() {
                         @Override
@@ -274,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                     if (treino.getWeekDay() != null &&
                                             treino.getWeekDay().trim().toUpperCase().equals(diaAtual)) {
 
+                                        isCurrentWorkoutChecked = treino.getChecked();
+
                                         currentWorkoutId = treino.getWorkoutSession_id();
                                         if (treino.getExercises() != null) {
                                             for (ExerciseSession session : treino.getExercises()) {
@@ -281,21 +284,22 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                                 int serie = session.getSerie();
                                                 int reps = session.getRepetitions();
                                                 String titulo = "Exercício s/ nome";
-                                                Long exercise_id = -1L;
                                                 String midiaURL = "";
                                                 String description = "";
 
+                                                Long session_id = -1L;
+                                                if (session.getExercisesession_id() != null) {
+                                                    session_id = session.getExercisesession_id();
+                                                }
                                                 if (session.getExercise() != null) {
                                                     if (session.getExercise().getTitle() != null)
                                                         titulo = session.getExercise().getTitle();
-                                                    if (session.getExercise().getExercise_id() != null)
-                                                        exercise_id = session.getExercise().getExercise_id();
                                                     if (session.getExercise().getMidiaURL() != null)
                                                         midiaURL = session.getExercise().getMidiaURL();
                                                     if (session.getExercise().getDescription() != null)
                                                         description = session.getExercise().getDescription();
                                                 }
-                                                tasksParaExibir.add(new Task(exercise_id, titulo, serie, reps, midiaURL, description));
+                                                tasksParaExibir.add(new Task(session_id, titulo, serie, reps, midiaURL, description));
                                             }
                                         }
                                     }

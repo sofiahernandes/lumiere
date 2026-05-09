@@ -1,5 +1,6 @@
 package com.example.projeto8.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardTask;
         LinearLayout expandArea, container;
-        TextView txtTitle;
+        TextView txtTitle, txtVideoLink;
         ImageView imgArrow;
 
         public ViewHolder(View itemView) {
@@ -45,6 +46,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             txtTitle = itemView.findViewById(R.id.txtTodayE);
             container = itemView.findViewById(R.id.container);
             imgArrow = itemView.findViewById(R.id.imgArrow);
+            txtVideoLink = itemView.findViewById(R.id.txtVideoLink);
         }
     }
 
@@ -60,45 +62,32 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Task task = tasks.get(position);
 
-// 1. Texto do título
+
         String textoExibicao = task.getTitle() + " | " + task.getSerie() + "x" + task.getReps();
         holder.txtTitle.setText(textoExibicao);
 
-        // 2. Controle de visibilidade da expansão
         holder.expandArea.setVisibility(task.isExpanded ? View.VISIBLE : View.GONE);
+        holder.imgArrow.setRotation(task.isExpanded ? 270f : 90f);
 
-        // 3. Clique para expandir (Diferente do clique de ir para outra tela)
-        holder.container.setOnClickListener(v -> {
-            // Inverte o estado de expansão
-            task.isExpanded = !task.isExpanded;
-
-            // Notifica o sistema para redesenhar esse item específico
-            notifyItemChanged(position);
-        });
-
-
-        if (task.isExpanded) {
-            holder.imgArrow.setRotation(270f);
+        String url = task.getMidiaURL();
+        if (url != null && !url.isEmpty()) {
+            holder.txtVideoLink.setText("Vídeo");
+            holder.txtVideoLink.setTextColor(holder.itemView.getContext().getColor(R.color.black));
+            holder.txtVideoLink.setOnClickListener(v -> {
+                if (listener != null) listener.onTaskClick(task);
+            });
         } else {
-            holder.imgArrow.setRotation(90f);
+            holder.txtVideoLink.setText("Não há vídeo");
+            holder.txtVideoLink.setTextColor(holder.itemView.getContext().getColor(android.R.color.black));
+            holder.txtVideoLink.setOnClickListener(null);
         }
+
         holder.container.setOnClickListener(v -> {
             task.isExpanded = !task.isExpanded;
-
-            // O notifyItemChanged fará o onBindViewHolder rodar de novo
-            // e aplicar a rotação correta
             notifyItemChanged(position);
         });
-
-        // 4. Clique no texto do vídeo (Se quiser abrir a ExercisesActivity por aqui)
-        View txtVideo = holder.itemView.findViewById(R.id.txtVideoLink);
-        txtVideo.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onTaskClick(task);
-            }
-        });
-
     }
+
 
     @Override
     public int getItemCount() {

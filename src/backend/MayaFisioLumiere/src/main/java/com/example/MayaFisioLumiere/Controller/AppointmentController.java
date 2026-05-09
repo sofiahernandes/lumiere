@@ -24,7 +24,7 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-    // busca todos os agendamentos dentro do banco de dados
+    // Busca todos os agendamentos dentro do banco de dados
     @GetMapping("/all")
     public ResponseEntity<?> getAllAppointments() {
         try {
@@ -35,7 +35,7 @@ public class AppointmentController {
         }
     }
 
-    //criar agendamento pela uuid do paciente
+    // Criar agendamento pela uuid do paciente
     @GetMapping("/patient/{uuid}")
     public ResponseEntity<?> getAppointmentsByPatient(@PathVariable("uuid") UUID patientId) {
         try {
@@ -47,7 +47,7 @@ public class AppointmentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno no servidor");
         }
     }
-
+// busca agendamento do mês do paciente
     @GetMapping("/patient/month/{patient_id}")
     public ResponseEntity<?>  getAppoinmentsforPatientByMonth(@PathVariable("patient_id") UUID patientId, int month, int year) {
         try{
@@ -68,7 +68,7 @@ public class AppointmentController {
         }
     }
 
-    // busca agendamento por mes
+    // Busca agendamento por mes
     @GetMapping("/month")
     public ResponseEntity<?> getAppointmentsByMonth(@RequestParam int month, @RequestParam int year) {
         try {
@@ -78,7 +78,7 @@ public class AppointmentController {
         }
     }
 
-    //busca agendamento por ano
+    // Busca agendamento por ano
     @GetMapping("/year")
     public ResponseEntity<?> getAppointmentsByYear(@RequestParam int year) {
         try {
@@ -88,7 +88,7 @@ public class AppointmentController {
         }
     }
 
-    //cria um agendamento
+    // Cria um agendamento
     @PostMapping("/create")
     public ResponseEntity<?> createAppointment(@RequestBody AppointmentRequestDTO body) {
         try {
@@ -99,7 +99,7 @@ public class AppointmentController {
         }
     }
 
-    // atualiza agendamento do paciente
+    // Atualiza agendamento do paciente
     @PutMapping("/update/{appointment_id}/{patient_id}")
     public ResponseEntity<?> updateAppointment(@RequestBody AppointmentRequestDTO data, @PathVariable UUID patient_id, @PathVariable UUID appointment_id) {
         try {
@@ -110,7 +110,7 @@ public class AppointmentController {
         }
     }
 
-    // deleta agendamento do paciente
+    // Deleta agendamento do paciente
     @DeleteMapping("/delete/{appointment_id}/{patient_id}")
     public ResponseEntity<?> deleteAppointment(@PathVariable UUID appointment_id, @PathVariable UUID patient_id) {
         try {

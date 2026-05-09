@@ -23,7 +23,7 @@ public class LoadScreen extends AppCompatActivity {
                 Intent intent = new Intent(LoadScreen.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
-            }, 5000);
+            }, 2000);
         }
     }
 
