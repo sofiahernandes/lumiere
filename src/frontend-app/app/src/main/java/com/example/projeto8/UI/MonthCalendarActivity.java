@@ -6,6 +6,8 @@ import static com.example.projeto8.UI.CalendarUtils.monthYearFromDate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,7 +57,6 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         selectedDateTV = findViewById(R.id.selectedDateTV);
 
-        // Referência segura para o ícone selecionado
         View menuInclude = findViewById(R.id.menu);
         if (menuInclude != null) {
             btnCalendar = menuInclude.findViewById(R.id.btnCalendar);
@@ -80,26 +81,32 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         );
     }
 
+    private void animateClick(View view) {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.scale_up_down);
+        view.startAnimation(anim);
+    }
     public void setupMenuClicks() {
-        // Clique na Agenda
-        btnCalendar.setOnClickListener(v -> {
-            updateMenuSelection(btnCalendar, containerCalendar, btnHome, containerHome, btnProfile, containerProfile);
-        });
-
-        // Clique na Home
         btnHome.setOnClickListener(v -> {
+            animateClick(v);
             updateMenuSelection(btnHome, containerHome, btnCalendar, containerCalendar, btnProfile, containerProfile);
             startActivity(new Intent(this, MainActivity.class));
-            overridePendingTransition(0, 0);
+            finish();
+
+        });
+
+
+        btnCalendar.setOnClickListener(v -> {
+            updateMenuSelection(btnProfile, containerProfile, btnCalendar, containerCalendar, btnHome, containerHome);
+
+        });
+
+        btnProfile.setOnClickListener(v -> {
+            animateClick(v);
+            updateMenuSelection(btnHome, containerHome, btnCalendar, containerCalendar, btnProfile, containerProfile);
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         });
 
-        // Clique no Perfil
-        btnProfile.setOnClickListener(v -> {
-            updateMenuSelection(btnProfile, containerProfile, btnCalendar, containerCalendar, btnHome, containerHome);
-            startActivity(new Intent(this, ProfileActivity.class));
-            overridePendingTransition(0, 0);
-        });
     }
 
     private void updateMenuSelection(View selectedBtn, View selectedContainer, View... others) {
