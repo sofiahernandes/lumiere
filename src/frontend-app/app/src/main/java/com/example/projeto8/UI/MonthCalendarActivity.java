@@ -32,7 +32,6 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
     private View btnCalendar, btnHome, btnProfile;
     private View containerCalendar, containerHome, containerProfile;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +50,6 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         setupMenuClicks();
     }
 
-
     private void initWidgets() {
         monthYearText = findViewById(R.id.monthYearTV);
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
@@ -60,17 +58,14 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         // Referência segura para o ícone selecionado
         View menuInclude = findViewById(R.id.menu);
         if (menuInclude != null) {
-            // Botões principais para clique
             btnCalendar = menuInclude.findViewById(R.id.btnCalendar);
             btnHome = menuInclude.findViewById(R.id.btnHome);
             btnProfile = menuInclude.findViewById(R.id.btnProfile);
 
-            // Containers internos para o fundo rosa (use os IDs do seu XML)
             containerCalendar = menuInclude.findViewById(R.id.containerCalendarSelect);
             containerHome = menuInclude.findViewById(R.id.containerHomeSelect);
             containerProfile = menuInclude.findViewById(R.id.containerProfileSelect);
 
-            // CONFIGURAÇÃO INICIAL: Como estamos na Agenda, ela começa selecionada
             if (btnCalendar != null) {
                 btnCalendar.setSelected(true);
                 if (containerCalendar != null) {
@@ -86,7 +81,7 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
     }
 
     public void setupMenuClicks() {
-// Clique na Agenda (Já está nela, pode apenas resetar a view se quiser)
+        // Clique na Agenda
         btnCalendar.setOnClickListener(v -> {
             updateMenuSelection(btnCalendar, containerCalendar, btnHome, containerHome, btnProfile, containerProfile);
         });
@@ -96,7 +91,7 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
             updateMenuSelection(btnHome, containerHome, btnCalendar, containerCalendar, btnProfile, containerProfile);
             startActivity(new Intent(this, MainActivity.class));
             overridePendingTransition(0, 0);
-            finish(); // Opcional: fecha a agenda ao ir para a home
+            finish();
         });
 
         // Clique no Perfil
@@ -111,14 +106,15 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         for (View view : others) {
             if (view != null) {
                 view.setSelected(false);
-                // Se for um dos containers internos, removemos o background
                 if (view == containerHome || view == containerCalendar || view == containerProfile) {
                     view.setBackground(null);
                 }
             }
         }
 
-        if (selectedBtn != null) selectedBtn.setSelected(true);
+        if (selectedBtn != null) {
+            selectedBtn.setSelected(true);
+        }
         if (selectedContainer != null) {
             selectedContainer.setBackgroundResource(R.drawable.selected_item_bg);
         }
@@ -129,15 +125,11 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         ArrayList<LocalDate> daysInMonth = daysInMonthArray(CalendarUtils.selectedDate);
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this, R.drawable.circle_selected);
-        // IMPORTANTE: Usar "this" em vez de getApplicationContext() para evitar crashes de layout
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
 
-
     }
-
-
 
     @Override
     public void onItemClick(int position, LocalDate date) {
@@ -151,10 +143,8 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
     private void updateSelectedDateText() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM", new Locale("pt", "BR"));
         String formatted = CalendarUtils.selectedDate.format(formatter);
-        // Deixar a primeira letra maiúscula
         selectedDateTV.setText(formatted.substring(0, 1).toUpperCase() + formatted.substring(1));
     }
-
 
     public void previousMonthAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);

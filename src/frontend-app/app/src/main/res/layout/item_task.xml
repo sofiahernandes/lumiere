@@ -33,7 +33,7 @@
                 android:textColor="@color/black"
                 android:text="AAAAAAAAAAA"
                 android:textFontWeight="600"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <ImageView
                 android:id="@+id/imgArrow"
@@ -43,7 +43,6 @@
                 android:layout_centerVertical="true"
                 android:rotation="90"
                 android:src="@drawable/chevron" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -60,9 +59,7 @@
                 android:layout_height="wrap_content"
                 android:text="|Video"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
-
+                android:textColor="@color/black" />
         </LinearLayout>
-
     </LinearLayout>
 </androidx.cardview.widget.CardView>

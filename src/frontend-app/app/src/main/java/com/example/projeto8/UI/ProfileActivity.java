@@ -28,7 +28,6 @@ import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    // TEXTOS E UI
     private TextView txtName, txtStatus, txtEmail, txtPassword, txtCpf,
             txtCellphone, txtBirthDate, txtAge, txtGender,
             txtHeight, txtWeight, txtDescription, txtLGDP, txtWorkoutCount;
@@ -51,7 +50,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void initWidgets() {
-        // TEXTOS
         txtName = findViewById(R.id.txtName);
         txtStatus = findViewById(R.id.txtStatus);
         txtEmail = findViewById(R.id.txtEmail);
@@ -70,7 +68,6 @@ public class ProfileActivity extends AppCompatActivity {
         pbWorkouts = findViewById(R.id.pbWorkouts);
         txtWorkoutCount = findViewById(R.id.txtWorkoutCount);
 
-        // BOTÕES
         btnExcluirConta = findViewById(R.id.btnExcluirConta);
         if (btnExcluirConta != null) {
             btnExcluirConta.setOnClickListener(v -> showDeleteDialog());
@@ -219,7 +216,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
         view.findViewById(R.id.btnDelete).setOnClickListener(v -> {
-            // Implementar lógica de exclusão aqui
+            // Lógica de exclusão aqui
             dialog.dismiss();
         });
 

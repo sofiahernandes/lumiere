@@ -17,16 +17,16 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PatientService {
-    //para pegar as rotas do backend de patients (dados do patient)!
-    //Buscar os dados do paciente pelo nome (para o profile)
+
+    // Buscar os dados do paciente pelo nome (para o profile)
     @GET("api/patient/getByName/{name}")
     Call<List<Patient>> getPatientByFullName(@Path("name") String name, @Query("surname") String surname);
 
-    //Buscar por patient id
+    // Buscar patient por id
     @GET("api/patient/getById/{id}")
     Call<PatientResponseDTO> getPatientById(@Path("id") String id);
 
-    //Login do patient
+    // Login do patient
     @Headers({"User-Agent: Mozilla/5.0", "Content-Type: application/json"})
     @POST("api/patient/login")
     Call<PatientLoginResponseDTO> login(@Body PatientLoginRequestDTO data);
@@ -34,8 +34,7 @@ public interface PatientService {
     @PUT("api/patient/updateLgpdStatus/{id}")
     Call<Void> updateLgpdStatus(@Path("id") String id, @Query("lgpdCheck") boolean lgpdCheck);
 
-    //LOGIN PARA USO DURANTE TESTES E DEVELOPMENT:
-    //analice.coimbra@lumiere.com
+    // LOGIN PARA USO DURANTE DESENVOLVIMENTO
+    // analice.coimbra@lumiere.com
     // 2004-07-14
-
 }

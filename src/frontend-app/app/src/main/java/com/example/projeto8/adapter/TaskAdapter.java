@@ -19,10 +19,12 @@ import com.example.projeto8.model.Task;
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+
     private ArrayList<Task> tasks;
     private OnTaskClickListener listener;
 
     public interface OnTaskClickListener {
+
         void onTaskClick(Task task);
     }
 
@@ -32,6 +34,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         CardView cardTask;
         LinearLayout expandArea, container;
         TextView txtTitle, txtVideoLink;
@@ -57,11 +60,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Task task = tasks.get(position);
-
 
         String textoExibicao = task.getTitle() + " | " + task.getSerie() + "x" + task.getReps();
         holder.txtTitle.setText(textoExibicao);
@@ -74,7 +75,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.txtVideoLink.setText("Vídeo");
             holder.txtVideoLink.setTextColor(holder.itemView.getContext().getColor(R.color.black));
             holder.txtVideoLink.setOnClickListener(v -> {
-                if (listener != null) listener.onTaskClick(task);
+                if (listener != null) {
+                    listener.onTaskClick(task);
+                }
             });
         } else {
             holder.txtVideoLink.setText("Não há vídeo");
@@ -87,7 +90,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             notifyItemChanged(position);
         });
     }
-
 
     @Override
     public int getItemCount() {

@@ -38,16 +38,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class MainActivity extends AppCompatActivity implements CalendarAdapter.OnItemListener {
-    private TextView monthYearText; // texto "Feb 2026"
-    private RecyclerView calendarRecyclerView; // calendário (dias)
+
+    private TextView monthYearText;
+    private RecyclerView calendarRecyclerView; // Calendário (dias)
     private TextView txtName;
     private RecyclerView recyclerTasks;
     private TaskAdapter adapter;
     private ArrayList<Task> tasksParaExibir;
-    ImageView iconHome, iconCalendar, iconProfile; // menu
-    View btnHome,btnCalendar,btnProfile;
+    ImageView iconHome, iconCalendar, iconProfile; // Menu
+    View btnHome, btnCalendar, btnProfile;
     View containerHome, containerCalendar, containerProfile;
     private Button btnStartWorkout;
     private Long currentWorkoutId = -1L;
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         }
 
         if (idRecebido != null) {
-            WorkoutSeshData(idRecebido); //Busca os exercícios associados ao paciente
-            checkAppointmentsData(UUID.fromString(idRecebido)); //Busca os agendamentos do paciente
+            WorkoutSeshData(idRecebido); // Busca os exercícios associados ao paciente
+            checkAppointmentsData(UUID.fromString(idRecebido)); // Busca os agendamentos do paciente
         }
     }
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         super.onCreate(savedInstanceState);
 
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main); // carrega o XML principal
+        setContentView(R.layout.activity_main); // Carrega o XML principal
 
         // Inicializa todos os componentes do XML
         initWidgets();
@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         adapter = new TaskAdapter(tasksParaExibir, new TaskAdapter.OnTaskClickListener() {
             @Override
             public void onTaskClick(Task task) {
-                /* nao precisa ter intent aqui pq ja tem o do btnStartWorkout ---tirar depois 
-                Intent intent = new Intent(MainActivity.this, ExercisesActivity.class);
+                /* Intent intent = new Intent(MainActivity.this, ExercisesActivity.class);
 
                 intent.putExtra("EXERCISE_TITLE", task.getTitle());
                 intent.putExtra("EXERCISE_MEDIA_URL", task.getMidiaURL());
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                 intent.putExtra("EXERCISE_ID", task.getExerciseId());
                 intent.putExtra("EXERCISE_REPS", task.getReps());
                 intent.putExtra("EXERCISE_SERIES", task.getSerie());
-                startActivity(intent);*/
+                startActivity(intent); */
             }
         });
         recyclerTasks.setAdapter(adapter);
@@ -129,7 +128,9 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         containerHome = menuView.findViewById(R.id.containerHomeSelect);
 
-        if (btnHome != null) btnHome.setSelected(true);
+        if (btnHome != null) {
+            btnHome.setSelected(true);
+        }
         btnStartWorkout = findViewById(R.id.btnStartWorkout);
     }
 
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             overridePendingTransition(0, 0);
         });
 
-        // Botão de Iniciar Treino (Lógica separada do menu)
+        // Botão de Iniciar Treino (separada do menu)
         btnStartWorkout.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ExercisesActivity.class);
             intent.putParcelableArrayListExtra("LISTA_EXERCICIOS", tasksParaExibir);
@@ -174,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         for (View view : others) {
             if (view != null) {
                 view.setSelected(false);
-                // Se for um container (verificamos pela ID), removemos o fundo
                 if (view == containerHome || view == containerCalendar || view == containerProfile) {
                     view.setBackground(null);
                 }
@@ -182,7 +182,9 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         }
 
         // Ativa o selecionado
-        if (selectedBtn != null) selectedBtn.setSelected(true);
+        if (selectedBtn != null) {
+            selectedBtn.setSelected(true);
+        }
         if (selectedContainer != null) {
             selectedContainer.setBackgroundResource(R.drawable.selected_item_bg);
         }
@@ -191,15 +193,16 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
     // Monta o calendário semanal
     private void setWeekView() {
 
-        // coloca "Mar 2026"
+        // "Mar 2026"
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
 
-        // pega os 7 dias da semana
+        // Pega os 7 dias da semana
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
-        // cria o adapter (responsável por desenhar cada dia)
+        // Cria o adapter (responsável por desenhar cada dia)
         CalendarAdapter calendarAdapter = new CalendarAdapter(days, this, R.drawable.selected_day_bg);
-        // define layout em grade com 7 colunas
+        
+        // Define layout em grade com 7 colunas
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 7);
 
         calendarRecyclerView.setLayoutManager(layoutManager);
@@ -234,21 +237,29 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         }
     }
 
-    //Para associar o dia do exercicio com o dia da semana
+    // Para associar o dia do exercicio com o dia da semana
     private String getDiaSemanaAbreviado(int diaSemana) {
         switch (diaSemana) {
-            case 1: return "SEG";
-            case 2: return "TER";
-            case 3: return "QUA";
-            case 4: return "QUI";
-            case 5: return "SEX";
-            case 6: return "SAB";
-            case 7: return "DOM";
-            default: return "";
+            case 1:
+                return "SEG";
+            case 2:
+                return "TER";
+            case 3:
+                return "QUA";
+            case 4:
+                return "QUI";
+            case 5:
+                return "SEX";
+            case 6:
+                return "SAB";
+            case 7:
+                return "DOM";
+            default:
+                return "";
         }
     }
 
-    //Mostrar a Workout do dia
+    // Mostrar a Workout do dia
     private void WorkoutSeshData(String patientId) {
         WorkoutService api = RetrofitClient.getWorkoutService();
         api.getWorkoutsByPatient(patientId).enqueue(new Callback<List<WorkoutSession>>() {
@@ -272,8 +283,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                 String diaAtual = getDiaSemanaAbreviado(diaSemana);
 
                                 for (WorkoutSession treino : listaDeTreinos) {
-                                    if (treino.getWeekDay() != null &&
-                                            treino.getWeekDay().trim().toUpperCase().equals(diaAtual)) {
+                                    if (treino.getWeekDay() != null
+                                            && treino.getWeekDay().trim().toUpperCase().equals(diaAtual)) {
 
                                         isCurrentWorkoutChecked = treino.getChecked();
 
@@ -292,12 +303,15 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                                     session_id = session.getExercisesession_id();
                                                 }
                                                 if (session.getExercise() != null) {
-                                                    if (session.getExercise().getTitle() != null)
+                                                    if (session.getExercise().getTitle() != null) {
                                                         titulo = session.getExercise().getTitle();
-                                                    if (session.getExercise().getMidiaURL() != null)
+                                                    }
+                                                    if (session.getExercise().getMidiaURL() != null) {
                                                         midiaURL = session.getExercise().getMidiaURL();
-                                                    if (session.getExercise().getDescription() != null)
+                                                    }
+                                                    if (session.getExercise().getDescription() != null) {
                                                         description = session.getExercise().getDescription();
+                                                    }
                                                 }
                                                 tasksParaExibir.add(new Task(session_id, titulo, serie, reps, midiaURL, description));
                                             }
@@ -321,6 +335,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                     });
                 }
             }
+
             @Override
             public void onFailure(Call<List<WorkoutSession>> call, Throwable t) {
                 Log.e("API_ERRO", "Mensagem: " + t.getMessage());
@@ -329,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         });
     }
 
-    //Buscar os appointments depois de retornar os dados do paciente no Login, juntos dos exercicios
+    // Buscar os appointments depois de retornar os dados do paciente no Login, juntos dos exercicios
     private void checkAppointmentsData(UUID patientId) {
         AppointmentService api = RetrofitClient.getAppointmentService();
         api.getAppointmentByPatient(patientId).enqueue(new Callback<List<Appointment>>() {
@@ -340,13 +355,13 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
                     for (Appointment appo : response.body()) {
                         try {
-                            String fullDateFromApi = appo.getDate(); // No banco vem "2026-04-27T00:00:00"
-                            String timeFromApi = appo.getTime();     // Vem "10:30"
+                            String fullDateFromApi = appo.getDate(); // Vem "2026-04-27T00:00:00"
+                            String timeFromApi = appo.getTime(); // Vem "10:30"
 
-                            // Pegamos os primeiros 10 digitos da data (YYYY-MM-DD) contando os -
+                            // Pegamos os primeiros 10 digitos da data (YYYY-MM-DD) contando os "-"
                             String cleanDate = fullDateFromApi.substring(0, 10);
 
-                            //Monta a String no formato do LocalDateTime
+                            // Monta a String no formato do LocalDateTime
                             String isoDateTime = cleanDate + "T" + timeFromApi;
 
                             // Se o time vier "10:30", isso ajusta os segundos
@@ -374,11 +389,4 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
             }
         });
     }
-
-
-
-
-
-
-
 }

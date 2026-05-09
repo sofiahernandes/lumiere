@@ -31,6 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ExercisesActivity extends AppCompatActivity {
+
     private ImageView imgExercise;
     private TextView textTitle, textDescription, txtSerieReps;
     private View btnPain;
@@ -50,7 +51,6 @@ public class ExercisesActivity extends AppCompatActivity {
         // Recupera a lista vinda da MainActivity e o status da workout
         listaExercicios = getIntent().getParcelableArrayListExtra("LISTA_EXERCICIOS");
 
-        // Validação da lista
         if (listaExercicios != null && !listaExercicios.isEmpty()) {
             // Verifica se o primeiro item é o aviso de "Descanse"
             if (listaExercicios.get(0).getExerciseId() == -1L) {
@@ -102,10 +102,10 @@ public class ExercisesActivity extends AppCompatActivity {
 
         // Se for o último, o botão vira um check workout
         if (index == listaExercicios.size() - 1) {
-            if (workoutDone){
+            if (workoutDone) {
                 btnNext.setImageResource(R.drawable.angle_down); // COLOCAR UM CHECK AQUIIII
                 btnNext.setImageTintList(ColorStateList.valueOf(Color.GRAY)); // Cinza para indicar bloqueio
-            } else{
+            } else {
                 btnNext.setImageResource(R.drawable.ic_empty); // TAMBEM colocar um ícone de finalizar/dar check
                 btnNext.setImageTintList(null);
             }
@@ -183,7 +183,7 @@ public class ExercisesActivity extends AppCompatActivity {
             SharedPreferences prefs = getSharedPreferences("STORAGE", MODE_PRIVATE);
             String patientId = prefs.getString("patient_id", null);
 
-            //Pega o RequestDTO para montar o feelPain
+            // Pega o RequestDTO para montar o feelPain
             ExerciseSessionRequestDTO body = new ExerciseSessionRequestDTO(true);
             ExerciseSessionService api = RetrofitClient.getExerciseService();
 
@@ -219,6 +219,7 @@ public class ExercisesActivity extends AppCompatActivity {
             }
         });
     }
+
     private void carregarMidia(String url) {
         if (url.contains("youtube.com") || url.contains("youtu.be")) {
             try {
@@ -226,7 +227,9 @@ public class ExercisesActivity extends AppCompatActivity {
                 if (url.contains("v=")) {
                     videoId = url.split("v=")[1];
                     int amp = videoId.indexOf('&');
-                    if (amp != -1) videoId = videoId.substring(0, amp);
+                    if (amp != -1) {
+                        videoId = videoId.substring(0, amp);
+                    }
                 } else if (url.contains("youtu.be/")) {
                     videoId = url.split("youtu.be/")[1];
                 }
