@@ -19,9 +19,7 @@ import com.example.projeto8.R;
 import com.example.projeto8.api.exerciseSession.ExerciseSessionDTO.ExerciseSessionRequestDTO;
 import com.example.projeto8.api.exerciseSession.ExerciseSessionService;
 import com.example.projeto8.api.workout.WorkoutService;
-import com.example.projeto8.model.ExerciseSession;
 import com.example.projeto8.model.Task;
-import com.example.projeto8.model.WorkoutSession;
 import com.example.projeto8.remote.RetrofitClient;
 
 import java.util.ArrayList;
@@ -103,10 +101,10 @@ public class ExercisesActivity extends AppCompatActivity {
         // Se for o último, o botão vira um check workout
         if (index == listaExercicios.size() - 1) {
             if (workoutDone){
-                btnNext.setImageResource(R.drawable.angle_down); // COLOCAR UM CHECK AQUIIII
-                btnNext.setImageTintList(ColorStateList.valueOf(Color.GRAY)); // Cinza para indicar bloqueio
+                btnNext.setImageResource(R.drawable.tobechecked); 
+                btnNext.setImageTintList(ColorStateList.valueOf(Color.GRAY));
             } else{
-                btnNext.setImageResource(R.drawable.ic_empty); // TAMBEM colocar um ícone de finalizar/dar check
+                btnNext.setImageResource(R.drawable.checked);
                 btnNext.setImageTintList(null);
             }
         } else {
