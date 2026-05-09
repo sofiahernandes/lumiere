@@ -30,7 +30,7 @@ public class WorkoutSessionEntity {
     @Column(nullable = false)
     private Boolean checked = false;
 
-    @Column
+    @Column(name = "workout_date")
     private LocalDate workoutDate;
 
     @ManyToOne

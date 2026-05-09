@@ -51,24 +51,24 @@ public class WorkoutSessionService {
     }
 
     // Permitir ao paciente dar check no Workout do dia (checked = true)
+    @Transactional
     public WorkoutSessionEntity checkWorkout(Long workoutSession_id) {
         WorkoutSessionEntity workout = workoutSessionRepository.findById(workoutSession_id)
                 .orElseThrow(() -> new RuntimeException("Workout não encontrado"));
 
         workout.setChecked(true);
-        if (workout.getChecked() == true) {
-            workout.setWorkoutDate(LocalDate.now());
-        }
-
+        workout.setWorkoutDate(LocalDate.now());
+        WorkoutSessionEntity savedWorkout = workoutSessionRepository.save(workout);
         checkPatientStatus(workout.getPatient().getPatient_ID());
-        return workoutSessionRepository.save(workout);
+
+            return savedWorkout;
     }
 
     //Resetar o check após 6 dias para o paciente treinar a próxima semana
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(fixedRate = 60000)
     @Transactional
     public void resetOldWorkouts() {
-        LocalDate limitDate = LocalDate.now().minusDays(6);
+        LocalDate limitDate = LocalDate.now().plusDays(1); //minusDays(6);
 
         List<WorkoutSessionEntity> oldWorkouts = workoutSessionRepository
                 .findByCheckedTrueAndWorkoutDateBefore(limitDate);
