@@ -65,10 +65,10 @@ public class WorkoutSessionService {
     }
 
     //Resetar o check após 6 dias para o paciente treinar a próxima semana
-    @Scheduled(fixedRate = 60000) // Roda as 3 da manha ofc: 0 0 3 * * *
+    @Scheduled(cron = "0 0 3 * * *")
     @Transactional
     public void resetOldWorkouts() {
-        LocalDate limitDate = LocalDate.now().plusDays(1); //mudar para 6 e minusDays depois
+        LocalDate limitDate = LocalDate.now().minusDays(6);
 
         List<WorkoutSessionEntity> oldWorkouts = workoutSessionRepository
                 .findByCheckedTrueAndWorkoutDateBefore(limitDate);
