@@ -18,4 +18,5 @@ public interface WorkoutSessionRepository extends JpaRepository<WorkoutSessionEn
 
     List<WorkoutSessionEntity> findByPatient(PatientEntity patient);
 
+    List<WorkoutSessionEntity> findByCheckedTrueAndWorkoutDateBefore(LocalDate date);
 }

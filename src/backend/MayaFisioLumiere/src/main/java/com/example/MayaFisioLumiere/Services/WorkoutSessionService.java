@@ -9,7 +9,9 @@ import com.example.MayaFisioLumiere.Entity.WorkoutSessionEntity;
 import com.example.MayaFisioLumiere.Repository.PatientRepository;
 import com.example.MayaFisioLumiere.Repository.WorkoutSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -60,6 +62,27 @@ public class WorkoutSessionService {
 
         checkPatientStatus(workout.getPatient().getPatient_ID());
         return workoutSessionRepository.save(workout);
+    }
+
+    //Resetar o check após 6 dias para o paciente treinar a próxima semana
+    @Scheduled(fixedRate = 60000) // Roda as 3 da manha ofc: 0 0 3 * * *
+    @Transactional
+    public void resetOldWorkouts() {
+        LocalDate limitDate = LocalDate.now().plusDays(1); //mudar para 6 e minusDays depois
+
+        List<WorkoutSessionEntity> oldWorkouts = workoutSessionRepository
+                .findByCheckedTrueAndWorkoutDateBefore(limitDate);
+
+        for (WorkoutSessionEntity workout : oldWorkouts) {
+            workout.setChecked(false);
+            workout.setWorkoutDate(null); // Limpa a data para o próximo check
+
+            //Para resetar a dor do exercício
+            if (workout.getExerciseSessions() != null) {
+                workout.getExerciseSessions().forEach(session -> session.setFeelPain(false));
+            }
+        }
+        workoutSessionRepository.saveAll(oldWorkouts);
     }
 
     // Verificar progresso desta semana
