@@ -53,7 +53,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void initWidgets() {
         txtName = findViewById(R.id.txtName);
-        txtStatus = findViewById(R.id.txtStatus);
         txtEmail = findViewById(R.id.txtEmail);
         txtPassword = findViewById(R.id.txtPassword);
         txtCpf = findViewById(R.id.txtCpf);

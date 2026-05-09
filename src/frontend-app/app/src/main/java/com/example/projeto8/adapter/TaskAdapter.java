@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projeto8.R;
@@ -24,7 +23,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private OnTaskClickListener listener;
 
     public interface OnTaskClickListener {
-
         void onTaskClick(Task task);
     }
 
@@ -34,7 +32,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         CardView cardTask;
         LinearLayout expandArea, container;
         TextView txtTitle, txtVideoLink;
@@ -42,8 +39,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            // Se o seu XML for um ConstraintLayout, use isso:
             cardTask = itemView.findViewById(R.id.cardTask);
             expandArea = itemView.findViewById(R.id.expandArea);
             txtTitle = itemView.findViewById(R.id.txtTodayE);
@@ -64,31 +59,42 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Task task = tasks.get(position);
 
-        String textoExibicao = task.getTitle() + " | " + task.getSerie() + "x" + task.getReps();
-        holder.txtTitle.setText(textoExibicao);
-
-        holder.expandArea.setVisibility(task.isExpanded ? View.VISIBLE : View.GONE);
-        holder.imgArrow.setRotation(task.isExpanded ? 270f : 90f);
-
-        String url = task.getMidiaURL();
-        if (url != null && !url.isEmpty()) {
-            holder.txtVideoLink.setText("Vídeo");
-            holder.txtVideoLink.setTextColor(holder.itemView.getContext().getColor(R.color.black));
-            holder.txtVideoLink.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onTaskClick(task);
-                }
-            });
+        // --- LÓGICA ACRESCENTADA PARA MENSAGEM ---
+        if (task.getExerciseId() == -1L) {
+            holder.txtTitle.setText(task.getTitle()); // Apenas o título da mensagem
+            holder.imgArrow.setVisibility(View.GONE); // Esconde a seta
+            holder.expandArea.setVisibility(View.GONE); // Garante que não expande
+            holder.container.setOnClickListener(null); // Desabilita o clique de expansão
         } else {
-            holder.txtVideoLink.setText("Não há vídeo");
-            holder.txtVideoLink.setTextColor(holder.itemView.getContext().getColor(android.R.color.black));
-            holder.txtVideoLink.setOnClickListener(null);
-        }
+            // --- LÓGICA ORIGINAL PARA EXERCÍCIOS ---
+            holder.imgArrow.setVisibility(View.VISIBLE); // Garante que a seta apareça
 
-        holder.container.setOnClickListener(v -> {
-            task.isExpanded = !task.isExpanded;
-            notifyItemChanged(position);
-        });
+            String textoExibicao = task.getTitle() + " | " + task.getSerie() + "x" + task.getReps();
+            holder.txtTitle.setText(textoExibicao);
+
+            holder.expandArea.setVisibility(task.isExpanded ? View.VISIBLE : View.GONE);
+            holder.imgArrow.setRotation(task.isExpanded ? 270f : 90f);
+
+            String url = task.getMidiaURL();
+            if (url != null && !url.isEmpty()) {
+                holder.txtVideoLink.setText("Vídeo");
+                holder.txtVideoLink.setTextColor(holder.itemView.getContext().getColor(R.color.black));
+                holder.txtVideoLink.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onTaskClick(task);
+                    }
+                });
+            } else {
+                holder.txtVideoLink.setText("Não há vídeo");
+                holder.txtVideoLink.setTextColor(holder.itemView.getContext().getColor(android.R.color.black));
+                holder.txtVideoLink.setOnClickListener(null);
+            }
+
+            holder.container.setOnClickListener(v -> {
+                task.isExpanded = !task.isExpanded;
+                notifyItemChanged(position);
+            });
+        }
     }
 
     @Override
