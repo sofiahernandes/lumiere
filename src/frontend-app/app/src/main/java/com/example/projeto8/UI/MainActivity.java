@@ -90,24 +90,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
         // Inicializa todos os componentes do XML
         initWidgets();
+        setupWorkoutActions();
 
-        // ConfigurA o RecyclerView de Tarefas com uma lista vazia inicial
-        tasksParaExibir = new ArrayList<>();
-
-        adapter = new TaskAdapter(tasksParaExibir, new TaskAdapter.OnTaskClickListener() {
-            @Override
-            public void onTaskClick(Task task) {
-                /* Intent intent = new Intent(MainActivity.this, ExercisesActivity.class);
-
-                intent.putExtra("EXERCISE_TITLE", task.getTitle());
-                intent.putExtra("EXERCISE_MEDIA_URL", task.getMidiaURL());
-                intent.putExtra("EXERCISE_DESC", task.getDescription());
-                intent.putExtra("EXERCISE_ID", task.getExerciseId());
-                intent.putExtra("EXERCISE_REPS", task.getReps());
-                intent.putExtra("EXERCISE_SERIES", task.getSerie());
-                startActivity(intent); */
-            }
-        });
         tasksParaExibir = new ArrayList<>();
 
         adapter = new TaskAdapter(tasksParaExibir, new TaskAdapter.OnTaskClickListener() {
@@ -125,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                 }
             }
         });
-
         recyclerTasks.setAdapter(adapter);
 
         // Configurações de Menu e Calendário
@@ -206,6 +189,23 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                 updateMenuSelection(btnProfile, containerProfile, btnCalendar, containerCalendar, btnHome, containerHome);
             });
         }
+    }
+
+    public void setupWorkoutActions(){
+        btnStartWorkout.setOnClickListener(v -> {
+            animateClick(v);
+
+            // Só abre se houver um treino carregado
+            if (currentWorkoutId != -1L) {
+                Intent intent = new Intent(MainActivity.this, ExercisesActivity.class);
+                intent.putParcelableArrayListExtra("LISTA_EXERCICIOS", tasksParaExibir);
+                intent.putExtra("WORKOUT_ID", currentWorkoutId);
+                intent.putExtra("IS_CHECKED", isCurrentWorkoutChecked);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Nenhum treino selecionado para hoje!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void updateMenuSelection(View selectedBtn, View selectedContainer, View... others) {
@@ -406,7 +406,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
         });
     }
 
-
     private void checkAppointmentsData(UUID patientId) {
         AppointmentService api = RetrofitClient.getAppointmentService();
         api.getAppointmentByPatient(patientId).enqueue(new Callback<List<Appointment>>() {
@@ -431,7 +430,6 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
                                     dataEHoraReal,
                                     appo.getDescription(),
                                     appo.getTime());
-
                         } catch (Exception e) {
                             Log.e("NOTIF_ERRO", "Falha ao processar data/hora: " + e.getMessage());
                         }
