@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import com.example.projeto8.api.patient.PatientDTO.PatientResponseDTO;
 import com.example.projeto8.remote.RetrofitClient;
 
 import java.util.Map;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -247,10 +249,37 @@ public class ProfileActivity extends AppCompatActivity {
 
         view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
         view.findViewById(R.id.btnDelete).setOnClickListener(v -> {
-            // Lógica de exclusão aqui
+            excluirConta();
             dialog.dismiss();
         });
 
         dialog.show();
+    }
+
+    private void excluirConta() {
+        String uuidStr = getSharedPreferences("STORAGE", MODE_PRIVATE).getString("patient_id", null);
+        if (uuidStr == null) return;
+
+        UUID patient_id = UUID.fromString(uuidStr);
+        RetrofitClient.getPatientService().deletePatient(patient_id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(ProfileActivity.this, "Conta excluída com sucesso", Toast.LENGTH_SHORT).show();
+                    getSharedPreferences("STORAGE", MODE_PRIVATE).edit().clear().apply();
+
+                    Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Log.e("DELETE_ERROR", "Erro ao deletar: " + response.code());
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("DELETE_ERROR", "Falha na conexão: " + t.getMessage());
+            }
+        });
     }
 }

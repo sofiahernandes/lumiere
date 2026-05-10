@@ -6,9 +6,11 @@ import com.example.projeto8.model.Patient;
 import com.example.projeto8.api.patient.PatientDTO.PatientLoginRequestDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -34,7 +36,8 @@ public interface PatientService {
     @PUT("api/patient/updateLgpdStatus/{id}")
     Call<Void> updateLgpdStatus(@Path("id") String id, @Query("lgpdCheck") boolean lgpdCheck);
 
-    // LOGIN PARA USO DURANTE DESENVOLVIMENTO
-    // analice.coimbra@lumiere.com
-    // 2004-07-14
+    @DELETE("api/patient/delete/{patient_id}")
+    Call<Void> deletePatient(@Path("patient_id") UUID patient_id);
+
+
 }
