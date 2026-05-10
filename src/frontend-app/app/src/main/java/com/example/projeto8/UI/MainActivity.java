@@ -160,8 +160,8 @@ public class MainActivity extends AppCompatActivity implements CalendarAdapter.O
 
     public void setupMenuClicks() {
 
-        if (btnHome != null) {
-            btnHome.setOnClickListener(v -> {
+        if (btnProfile != null) {
+            btnProfile.setOnClickListener(v -> {
                 animateClick(v);
                 // Abre a MainActivity e fecha a Profile
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
