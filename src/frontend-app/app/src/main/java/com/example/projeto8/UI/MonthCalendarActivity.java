@@ -303,8 +303,7 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
 
     private void setUpAppointment() {
         btnCancelarAgendamento.setOnClickListener(v -> {
-            String whatsappUrl = "https://api.whatsapp.com/send/?phone=5511998820868&text=Olá%21%0D+gostaria+" +
-                    "de+falar+sobre+meu+agendamento.&type=phone_number&app_absent=0";
+            String whatsappUrl = "https://api.whatsapp.com/send/?phone=5511998820868&text=Olá%21%0D+gostaria+de+falar+sobre+meu+agendamento.&type=phone_number&app_absent=0";
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(whatsappUrl));
             startActivity(intent);
