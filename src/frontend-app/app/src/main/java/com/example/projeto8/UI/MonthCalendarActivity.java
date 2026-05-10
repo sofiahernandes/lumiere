@@ -7,6 +7,7 @@ import static com.example.projeto8.UI.CalendarUtils.monthYearFromDate;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +43,7 @@ import retrofit2.Response;
 
 public class MonthCalendarActivity extends AppCompatActivity implements CalendarAdapter.OnItemListener {
 
+    private Button btnCancelarAgendamento;
     private TextView monthYearText, selectedDateTV;
     private RecyclerView calendarRecyclerView;
     private View btnCalendar, btnHome, btnProfile;
@@ -78,6 +80,7 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         initWidgets();
         setMonthView();
         setupMenuClicks();
+        setUpAppointment();
     }
 
     @Override
@@ -140,6 +143,8 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         selectedDateTV = findViewById(R.id.selectedDateTV);
 
+        btnCancelarAgendamento = findViewById(R.id.btnCancelarAgendamento);
+
         // Inicializa o RecyclerView de agendamentos
         recyclerViewAppointments = findViewById(R.id.recyclerViewAppointments);
         recyclerViewAppointments.setLayoutManager(new LinearLayoutManager(this));
@@ -176,6 +181,7 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.scale_up_down);
         view.startAnimation(anim);
     }
+
     public void setupMenuClicks() {
         // BOTÃO HOME
         if (btnHome != null) {
@@ -232,7 +238,6 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
     }
 
 
-
     private void setMonthView() {
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> daysInMonth = daysInMonthArray(CalendarUtils.selectedDate);
@@ -279,6 +284,7 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
             }
         }
     }
+
     private void createNotificationChannel() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
@@ -294,4 +300,16 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
             }
         }
     }
+
+    private void setUpAppointment() {
+        btnCancelarAgendamento.setOnClickListener(v -> {
+            String whatsappUrl = "https://api.whatsapp.com/send/?phone=5511998820868&text=Olá%21%0D+gostaria+" +
+                    "de+falar+sobre+meu+agendamento.&type=phone_number&app_absent=0";
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(whatsappUrl));
+            startActivity(intent);
+
+        });
+    }
+
 }
