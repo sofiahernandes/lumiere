@@ -17,8 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:elevation="1dp"
-        android:background="@color/lightOrange">
+        android:elevation="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"

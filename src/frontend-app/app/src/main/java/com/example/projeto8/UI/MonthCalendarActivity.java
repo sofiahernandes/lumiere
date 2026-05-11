@@ -303,11 +303,26 @@ public class MonthCalendarActivity extends AppCompatActivity implements Calendar
 
     private void setUpAppointment() {
         btnCancelarAgendamento.setOnClickListener(v -> {
-            String whatsappUrl = "https://api.whatsapp.com/send/?phone=5511998820868&text=Olá%21%0D+gostaria+de+falar+sobre+meu+agendamento.&type=phone_number&app_absent=0";
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(whatsappUrl));
-            startActivity(intent);
 
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(v.getContext());
+
+            builder.setTitle("Falar com a Maya");
+            builder.setMessage("Você será redirecionado para o WhatsApp da Maia, deseja continuar?");
+
+            // 3. Botão de "Continuar" (Aqui vai o seu código do WhatsApp)
+            builder.setPositiveButton("Continuar", (dialog, which) -> {
+                String whatsappUrl = "https://api.whatsapp.com/send/?phone=5511998820868&text=Olá%21%0D+gostaria+de+falar+sobre+meu+agendamento.&type=phone_number&app_absent=0";
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(whatsappUrl));
+                startActivity(intent);
+            });
+
+
+            builder.setNegativeButton("Cancelar", (dialog, which) -> {
+                dialog.dismiss();
+            });
+
+            builder.show();
         });
     }
 

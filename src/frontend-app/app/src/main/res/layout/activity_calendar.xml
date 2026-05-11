@@ -140,7 +140,7 @@
             android:layout_height="wrap_content"
             android:text="Agendamento"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="26sp"
             android:paddingTop="20dp"
             android:paddingLeft="20dp"
             android:textStyle="bold" />
@@ -164,18 +164,10 @@
         android:orientation="vertical">
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewAppointments"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="10dp"
-             />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Deseja cancelar?"
+            android:text="Deseja reagendar?"
             android:textColor="@color/black"
             android:textSize="14sp"
             android:paddingTop="10dp"
@@ -188,7 +180,14 @@
             android:layout_margin="15dp"
             android:textColor="@color/white"
             android:background="@drawable/bg_button_ag_in"
-            android:text="Cancelar agendamento" />
+            android:text="reagendar" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewAppointments"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="10dp" />
 
     </LinearLayout>
 
