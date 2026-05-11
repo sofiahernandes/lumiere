@@ -62,5 +62,14 @@
                 android:textStyle="bold"
                 android:textColor="@color/black" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgEmptyState"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginTop="-130dp"
+            android:src="@drawable/ic_maya_slepping"
+            android:visibility="gone" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

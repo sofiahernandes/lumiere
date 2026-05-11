@@ -29,7 +29,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:elevation="10dp"
-        android:src="@drawable/ic_girl1"
+        android:src="@drawable/icon"
         app:layout_constraintBottom_toBottomOf="@id/topBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/topBackground" />
@@ -129,6 +129,7 @@
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
+            android:paddingTop="18dp"
             android:text="Exercício de hoje"
             android:textSize="18sp"
             android:textFontWeight="700"

@@ -1,6 +1,8 @@
 package com.example.projeto8.adapter;
 
+import android.graphics.Color;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +37,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         CardView cardTask;
         LinearLayout expandArea, container;
         TextView txtTitle, txtVideoLink;
-        ImageView imgArrow;
+        ImageView imgArrow,imgEmptyState;;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -45,6 +47,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             container = itemView.findViewById(R.id.container);
             imgArrow = itemView.findViewById(R.id.imgArrow);
             txtVideoLink = itemView.findViewById(R.id.txtVideoLink);
+            imgEmptyState = itemView.findViewById(R.id.imgEmptyState);
         }
     }
 
@@ -64,6 +67,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.imgArrow.setVisibility(View.GONE); // Esconde a seta
             holder.expandArea.setVisibility(View.GONE); // Garante que não expande
             holder.container.setOnClickListener(null); // Desabilita o clique de expansão
+            holder.imgEmptyState.setVisibility(View.VISIBLE);
+
+            holder.cardTask.setCardBackgroundColor(Color.TRANSPARENT); // Remove a cor laranja/branca
+            holder.cardTask.setCardElevation(0f);                    // Remove a sombra (essencial!)
+            holder.cardTask.setMaxCardElevation(0f);
+            holder.container.setBackgroundColor(Color.TRANSPARENT);
+            holder.txtTitle.setGravity(Gravity.CENTER);
 
 
         } else {
@@ -71,9 +81,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
             String textoExibicao = task.getTitle() + " | " + task.getSerie() + "x" + task.getReps();
             holder.txtTitle.setText(textoExibicao);
-
+            holder.imgEmptyState.setVisibility(View.GONE);
             holder.expandArea.setVisibility(task.isExpanded ? View.VISIBLE : View.GONE);
             holder.imgArrow.setRotation(task.isExpanded ? 270f : 90f);
+            holder.cardTask.setCardBackgroundColor(holder.itemView.getContext().getColor(R.color.lightOrange));
 
             String url = task.getMidiaURL();
             if (url != null && !url.isEmpty()) {

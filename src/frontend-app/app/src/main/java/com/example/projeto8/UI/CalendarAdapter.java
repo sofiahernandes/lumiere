@@ -84,6 +84,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
                 holder.selectionContainer.getLayoutParams().width = (int) (45 * density);
                 holder.dayName.setVisibility(View.VISIBLE);
 
+
                 // Pega o nome do dia (DOM, SEG...) traduzido
                 java.util.Locale localeBR = new java.util.Locale("pt", "BR");
                 String nomeDia = date.getDayOfWeek()
@@ -94,7 +95,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
                 holder.dayName.setText(nomeDia);
 
 
-                // --- ALTERAÇÃO AQUI: Lógica da Bolinha ---
                 // Se a data atual está no conjunto de datas com treino, mostra a bolinha
                 if (datesWithWorkouts != null && datesWithWorkouts.contains(date)) {
                     holder.exerciseDot.setVisibility(View.VISIBLE);
