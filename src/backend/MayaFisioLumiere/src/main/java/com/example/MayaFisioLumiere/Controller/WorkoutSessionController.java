@@ -39,6 +39,47 @@ public class WorkoutSessionController {
         }
     }
 
+        //Resetar o check após 6 dias para o paciente treinar a próxima semana
+    @Scheduled(cron = "0 0 3 * * *")
+    @Transactional
+    public void resetOldWorkouts() {
+        LocalDate limitDate = LocalDate.now().minusDays(6);
+
+        List<WorkoutSessionEntity> oldWorkouts = workoutSessionRepository
+                .findByCheckedTrueAndWorkoutDateBefore(limitDate);
+
+        for (WorkoutSessionEntity workout : oldWorkouts) {
+            workout.setChecked(false);
+            workout.setWorkoutDate(null); // Limpa a data para o próximo check
+
+            //Para resetar a dor do exercício
+            if (workout.getExerciseSessions() != null) {
+                workout.getExerciseSessions().forEach(session -> session.setFeelPain(false));
+            }
+        }
+        workoutSessionRepository.saveAll(oldWorkouts);
+    }
+
+        // Verificar progresso desta semana
+    public Map<String, Object> getWeeklyProgress(UUID patientId) {
+        PatientEntity patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
+        List<WorkoutSessionEntity> allWorkouts = workoutSessionRepository.findByPatient(patient);
+        long total = allWorkouts.size();
+
+        LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
+        List<WorkoutSessionEntity> completedWorkouts
+                = workoutSessionRepository.findByPatientAndWorkoutDateAfterAndCheckedTrue(patient, sevenDaysAgo);
+        long completed = completedWorkouts.size();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("total", total);
+        response.put("completed", completed);
+
+        return response;
+    }
+
     // Buscar todos os pacientes ativos
     // /workout/patients/active
     @GetMapping("/patients/active")
