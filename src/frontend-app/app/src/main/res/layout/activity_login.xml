@@ -102,6 +102,20 @@
             android:textSize="16sp"
             android:inputType="textPassword"
             app:layout_constraintTop_toBottomOf="@id/labelSenha" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_marginTop="30dp"
+            android:text="Entre na URL: https://projeto8.onrender.com/ no google, \nE preencha o login com as credenciais:
+            \nanalice.coimbra@lumiere.com\n2004-07-14"
+            android:textColor="#666666"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnLogin"
+            app:layout_constraintBottom_toTopOf="@+id/textLegal"
+             />
+
 
         <TextView
             android:id="@+id/forgotPassword"
